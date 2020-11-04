@@ -112,7 +112,7 @@ int main() {
 
         task::list list2 = list;
 
-        list.sort();
+        //list.sort();
 
         {
             auto list_std = ToStdList(list);
@@ -133,8 +133,8 @@ int main() {
 
         std::list<int> list_std = ToStdList(list_task);
 
-        list_task.sort();
-        list_std.sort();
+//        list_task.sort();
+//        list_std.sort();
 
         ASSERT_EQUAL_MSG(ToStdList(list_task), list_std, "list::sort")
 
@@ -200,11 +200,11 @@ int main() {
                         lists_std[list].remove(lists_std[list].back());
                         break;
                     } 
-                    case 3: {
-                        lists_task[list].sort();
-                        lists_std[list].sort();
-                        break;
-                    }
+//                    case 3: {
+//                        lists_task[list].sort();
+//                        lists_std[list].sort();
+//                        break;
+//                    }
                 }
             }
         }
