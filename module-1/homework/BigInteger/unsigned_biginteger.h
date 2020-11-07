@@ -23,8 +23,7 @@ class UnsignedBigInteger
 
 	class divide_by_zero : public std::exception
 	{
-		virtual const char* what() const throw()
-		{
+		virtual const char* what() const throw() {
 			return "Division by zero";
 		}
 	};

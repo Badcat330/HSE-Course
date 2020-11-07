@@ -8,8 +8,7 @@
 #include "biginteger.h"
 #include "gtest/gtest.h"
 
-TEST(AssignmentFromInt, Test1)
-{
+TEST(AssignmentFromInt, Test1) {
 	int value = 42;
 	BigInteger bigint_val;
 	bigint_val = value;
@@ -19,8 +18,7 @@ TEST(AssignmentFromInt, Test1)
 	ASSERT_EQ(oss.str(), std::to_string(value));
 }
 
-TEST(UnaryMinus, Test1)
-{
+TEST(UnaryMinus, Test1) {
 	int value = 42;
 	BigInteger bigint_val = value;
 	bigint_val = -bigint_val;
@@ -30,8 +28,7 @@ TEST(UnaryMinus, Test1)
 	ASSERT_EQ(oss.str(), std::to_string(-value));
 }
 
-TEST(ToString, Test1)
-{
+TEST(ToString, Test1) {
 	int value = 42;
 	BigInteger bigint_val = value;
 
@@ -40,8 +37,7 @@ TEST(ToString, Test1)
 }
 
 //My test
-TEST(Incriment, Test1)
-{
+TEST(Incriment, Test1) {
 	int value = -1;
 	BigInteger big_value = value;
 	std::string testString = (big_value++).toString();
@@ -50,8 +46,7 @@ TEST(Incriment, Test1)
 	ASSERT_EQ(testString, std::to_string(++value));
 }
 
-TEST(Dicriment, Test1)
-{
+TEST(Dicriment, Test1) {
 	int value = 0;
 	BigInteger big_value = value;
 	std::string testString = (big_value--).toString();
@@ -60,8 +55,7 @@ TEST(Dicriment, Test1)
 	ASSERT_EQ(testString, std::to_string(--value));
 }
 
-TEST(Plus, Test1)
-{
+TEST(Plus, Test1) {
 	int a = -434;
 	int b = 43;
 	BigInteger big_value_a = a;
@@ -70,8 +64,7 @@ TEST(Plus, Test1)
 	ASSERT_EQ(answer.toString(), std::to_string(a + b));
 }
 
-TEST(PlusEquel, Test1)
-{
+TEST(PlusEquel, Test1) {
 	int a = -43;
 	int b = 4322;
 	BigInteger big_value_a = a;
@@ -80,8 +73,7 @@ TEST(PlusEquel, Test1)
 	ASSERT_EQ(big_value_a.toString(), std::to_string(a + b));
 }
 
-TEST(Minus, Test1)
-{
+TEST(Minus, Test1) {
 	int a = 3224;
 	int b = 3220;
 	BigInteger big_value_a = a;
@@ -90,8 +82,7 @@ TEST(Minus, Test1)
 	ASSERT_EQ(answer.toString(), std::to_string(a - b));
 }
 
-TEST(MinusEq, Test1)
-{
+TEST(MinusEq, Test1) {
 	int a = 43;
 	int b = -23;
 	BigInteger big_value_a = a;
@@ -100,8 +91,7 @@ TEST(MinusEq, Test1)
 	ASSERT_EQ(big_value_a.toString(), std::to_string(a - b));
 }
 
-TEST(Multiply, Test1)
-{
+TEST(Multiply, Test1) {
 	int a = 2332;
 	int b = 54;
 	BigInteger big_value_a = a;
@@ -110,8 +100,7 @@ TEST(Multiply, Test1)
 	ASSERT_EQ(big_value_a.toString(), std::to_string(a * b));
 }
 
-TEST(MultiplyEq, Test1)
-{
+TEST(MultiplyEq, Test1) {
 	int a = 3224;
 	int b = 2323;
 	BigInteger big_value_a = a;
@@ -120,8 +109,7 @@ TEST(MultiplyEq, Test1)
 	ASSERT_EQ(big_value_a.toString(), std::to_string(a * b));
 }
 
-TEST(Divide, Test1)
-{
+TEST(Divide, Test1) {
 	int a = 127456;
 	int b = 42;
 	BigInteger big_value_a = a;
@@ -130,8 +118,7 @@ TEST(Divide, Test1)
 	ASSERT_EQ(big_value_a.toString(), std::to_string(a / b));
 }
 
-TEST(DivideEq, Test1)
-{
+TEST(DivideEq, Test1) {
 	int a = 127456;
 	int b = 42;
 	BigInteger big_value_a = a;
@@ -140,8 +127,7 @@ TEST(DivideEq, Test1)
 	ASSERT_EQ(big_value_a.toString(), std::to_string(a / b));
 }
 
-TEST(DivideZero, Test1)
-{
+TEST(DivideZero, Test1) {
 	int a = 127456;
 	int b = 0;
 	BigInteger big_value_a = a;
@@ -149,8 +135,7 @@ TEST(DivideZero, Test1)
 	ASSERT_THROW(big_value_a / big_value_b, UnsignedBigInteger::divide_by_zero);
 }
 
-TEST(DivideEqZero, Test1)
-{
+TEST(DivideEqZero, Test1) {
 	int a = 127456;
 	int b = 0;
 	BigInteger big_value_a = a;
@@ -158,8 +143,7 @@ TEST(DivideEqZero, Test1)
 	ASSERT_THROW(big_value_a /= big_value_b, UnsignedBigInteger::divide_by_zero);
 }
 
-TEST(Mod, Test1)
-{
+TEST(Mod, Test1) {
 	int a = 4423412;
 	int b = -323413;
 	BigInteger big_value_a = a;
@@ -168,8 +152,7 @@ TEST(Mod, Test1)
 	ASSERT_EQ(big_value_a.toString(), std::to_string(a % b));
 }
 
-TEST(ModEq, Test1)
-{
+TEST(ModEq, Test1) {
 	int a = -5;
 	int b = 4;
 	BigInteger big_value_a = a;
@@ -178,8 +161,7 @@ TEST(ModEq, Test1)
 	ASSERT_EQ(big_value_a.toString(), std::to_string(a % b));
 }
 
-TEST(ToAssignment, Test1)
-{
+TEST(ToAssignment, Test1) {
 	int val = 42;
 	BigInteger bigint_val = val;
 	bigint_val += bigint_val += bigint_val += bigint_val;
@@ -190,8 +172,7 @@ TEST(ToAssignment, Test1)
 	ASSERT_EQ(oss.str(), std::to_string(val));
 }
 
-TEST(Arithmetic, Test1)
-{
+TEST(Arithmetic, Test1) {
 	int a = 42;
 	int b = 11;
 	BigInteger bigint_a = a;
@@ -214,8 +195,7 @@ TEST(Arithmetic, Test1)
 	ASSERT_EQ(oss.str(), std::to_string(a) + std::to_string(b));
 }
 
-TEST(TypeCast, Test1)
-{
+TEST(TypeCast, Test1) {
 	BigInteger bigint_val = 42;
 	ASSERT_TRUE(bool(bigint_val));
 
@@ -223,8 +203,7 @@ TEST(TypeCast, Test1)
 	ASSERT_FALSE(bool(bigint_val));
 }
 
-TEST(InStream, Test1)
-{
+TEST(InStream, Test1) {
 	int value = 42;
 	BigInteger bigint_val = value;
 
@@ -236,8 +215,7 @@ TEST(InStream, Test1)
 	ASSERT_EQ(oss.str(), std::to_string(value));
 }
 
-TEST(Comparison, Test1)
-{
+TEST(Comparison, Test1) {
 
 	std::istringstream iss("9325492345983274589758023847509283745827349587212938129"
 						   "348762838512387487213648172639471269348172397461297");
@@ -250,8 +228,7 @@ TEST(Comparison, Test1)
 	ASSERT_EQ(oss.str(), "010101");
 }
 
-int main(int argc, char** argv)
-{
+int main(int argc, char** argv) {
 	::testing::InitGoogleTest(&argc, argv);
 	return RUN_ALL_TESTS();
 }
