@@ -9,6 +9,23 @@ namespace task
 
 	 public:
 
+		struct node
+		{
+			node() {
+				value = 0;
+				left = nullptr;
+				right = nullptr;
+			}
+
+			node(int _value, node* _left, node* _right) : value(_value), left(_left), right(_right)
+			{
+			}
+
+			int value;
+			node* left;
+			node* right;
+		};
+
 		/**
 		 * Complexity: Constant
 		 */
@@ -118,26 +135,16 @@ namespace task
 		 * Sorts the elements in ascending order. The order of equal elements is preserved.
 		 * Complexity: Approximately N log N comparisons, where N is the number of elements in the list.
 		 */
-		//void sort();
-
-		struct Node
-		{
-
-			Node(int _value, Node* _left, Node* _right) : value(_value), left(_left), right(_right)
-			{
-			}
-
-			int value = 0;
-			Node* left = nullptr;
-			Node* right = nullptr;
-		};
+		void sort();
 
 	 private:
-		Node* head = nullptr;
-		Node* tail = nullptr;
+		node* head = nullptr;
+		node* tail = nullptr;
 		size_t container_size = 0;
 
-		Node* delete_node(Node* node);
+		list* sort(list* collection);
+		void push_back(node* newNode);
+		node* delete_node(node* node);
 	};
 
 }  // namespace task
