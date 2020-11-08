@@ -9,6 +9,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <algorithm>
 
 class UnsignedBigInteger
 {
@@ -28,29 +29,29 @@ class UnsignedBigInteger
 		}
 	};
 
-	bool operator<(const UnsignedBigInteger& b) const;
+	friend bool operator<(const UnsignedBigInteger& a, const UnsignedBigInteger& b);
 
-	bool operator==(const UnsignedBigInteger& b) const;
+	friend bool operator==(const UnsignedBigInteger& a, const UnsignedBigInteger& b);
 
-	bool operator!=(const UnsignedBigInteger& b) const;
+	friend bool operator!=(const UnsignedBigInteger& a, const UnsignedBigInteger& b);
 
-	bool operator>(const UnsignedBigInteger& b) const;
+	friend bool operator>(const UnsignedBigInteger& a, const UnsignedBigInteger& b);
 
-	bool operator<=(const UnsignedBigInteger& b) const;
+	friend bool operator<=(const UnsignedBigInteger& a, const UnsignedBigInteger& b);
 
-	bool operator>=(const UnsignedBigInteger& b) const;
+	friend bool operator>=(const UnsignedBigInteger& a, const UnsignedBigInteger& b);
 
 	UnsignedBigInteger& operator=(const UnsignedBigInteger& copy);
 
-	UnsignedBigInteger operator+(const UnsignedBigInteger& b) const;
+	friend UnsignedBigInteger operator+(const UnsignedBigInteger& a, const UnsignedBigInteger& b);
 
-	UnsignedBigInteger operator-(const UnsignedBigInteger& b) const;
+	friend UnsignedBigInteger operator-(const UnsignedBigInteger& a, const UnsignedBigInteger& b);
 
-	UnsignedBigInteger operator*(const UnsignedBigInteger& b) const;
+	friend UnsignedBigInteger operator*(const UnsignedBigInteger& a, const UnsignedBigInteger& b);
 
-	UnsignedBigInteger operator/(const UnsignedBigInteger& b) const;
+	friend UnsignedBigInteger operator/(const UnsignedBigInteger& a, const UnsignedBigInteger& b);
 
-	UnsignedBigInteger operator%(const UnsignedBigInteger& b) const;
+	friend UnsignedBigInteger operator%(const UnsignedBigInteger& a, const UnsignedBigInteger& b);
 
 	UnsignedBigInteger& operator+=(const UnsignedBigInteger& b);
 

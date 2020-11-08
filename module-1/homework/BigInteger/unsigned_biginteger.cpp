@@ -145,19 +145,19 @@ const UnsignedBigInteger UnsignedBigInteger::operator--(int) {
 	return buf;
 }
 
-UnsignedBigInteger UnsignedBigInteger::operator+(const UnsignedBigInteger& b) const {
+UnsignedBigInteger operator+(const UnsignedBigInteger& a, const UnsignedBigInteger& b){
 	UnsignedBigInteger newNumber;
 	newNumber.digits.clear();
 	char dopNumber = 0;
 	size_t i = 0;
-	for (; i < std::min(digits.size(), b.digits.size()); ++i) {
-		char buf = (digits[i] - '0') + (b.digits[i] - '0') + dopNumber;
+	for (; i < std::min(a.digits.size(), b.digits.size()); ++i) {
+		char buf = (a.digits[i] - '0') + (b.digits[i] - '0') + dopNumber;
 		newNumber.digits.push_back(buf % 10 + '0');
 		dopNumber = buf / 10;
 	}
 
-	while (i < digits.size()) {
-		char buf = ((digits[i] - '0') + dopNumber);
+	while (i < a.digits.size()) {
+		char buf = ((a.digits[i] - '0') + dopNumber);
 		newNumber.digits.push_back(buf % 10 + '0');
 		dopNumber = buf / 10;
 		++i;
@@ -205,74 +205,74 @@ UnsignedBigInteger& UnsignedBigInteger::operator+=(const UnsignedBigInteger& b) 
 	return *this;
 }
 
-bool UnsignedBigInteger::operator<(const UnsignedBigInteger& b) const {
-	if (digits.size() < b.digits.size())
+bool operator<(const UnsignedBigInteger& a, const UnsignedBigInteger& b){
+	if (a.digits.size() < b.digits.size())
 		return true;
 
-	if (digits.size() > b.digits.size())
+	if (a.digits.size() > b.digits.size())
 		return false;
 
-	for (int i = digits.size() - 1; i >= 0; --i) {
-		if (digits[i] != b.digits[i])
-			return digits[i] < b.digits[i];
+	for (int i = a.digits.size() - 1; i >= 0; --i) {
+		if (a.digits[i] != b.digits[i])
+			return a.digits[i] < b.digits[i];
 	}
 
 	return false;
 }
 
-bool UnsignedBigInteger::operator>=(const UnsignedBigInteger& b) const {
-	return !(*this < b);
+bool operator>=(const UnsignedBigInteger& a, const UnsignedBigInteger& b) {
+	return !(a < b);
 }
 
-bool UnsignedBigInteger::operator==(const UnsignedBigInteger& b) const {
-	return !(*this < b) && !(b < *this);
+bool operator==(const UnsignedBigInteger& a, const UnsignedBigInteger& b) {
+	return !(a < b) && !(b < a);
 }
 
-bool UnsignedBigInteger::operator!=(const UnsignedBigInteger& b) const {
-	return !(*this == b);
+bool operator!=(const UnsignedBigInteger& a, const UnsignedBigInteger& b) {
+	return !(a == b);
 }
 
-bool UnsignedBigInteger::operator>(const UnsignedBigInteger& b) const {
-	return (*this >= b) && (*this != b);
+bool operator>(const UnsignedBigInteger& a, const UnsignedBigInteger& b){
+	return (a >= b) && (a != b);
 }
 
-bool UnsignedBigInteger::operator<=(const UnsignedBigInteger& b) const {
-	return (*this < b) || (*this == b);
+bool operator<=(const UnsignedBigInteger& a, const UnsignedBigInteger& b) {
+	return (a < b) || (a == b);
 }
 
-UnsignedBigInteger UnsignedBigInteger::operator-(const UnsignedBigInteger& b) const {
+UnsignedBigInteger operator-(const UnsignedBigInteger& a, const UnsignedBigInteger& b) {
 	UnsignedBigInteger newNumber;
 
-	if (*this <= b)
+	if (a <= b)
 		return newNumber;
 	else
 		newNumber.digits.clear();
 
 	size_t i = 0;
 	bool nextRank = false;
-	for (; i < std::min(digits.size(), b.digits.size()); ++i) {
+	for (; i < std::min(a.digits.size(), b.digits.size()); ++i) {
 		char buf = b.digits[i] + nextRank;
-		if (digits[i] < buf) {
+		if (a.digits[i] < buf) {
 			nextRank = true;
-			newNumber.digits.push_back((10 - (buf - digits[i])) + '0');
+			newNumber.digits.push_back((10 - (buf - a.digits[i])) + '0');
 		}
 		else {
 			nextRank = false;
-			newNumber.digits.push_back(digits[i] - buf + '0');
+			newNumber.digits.push_back(a.digits[i] - buf + '0');
 		}
 	}
 
-	while (i < digits.size()) {
+	while (i < a.digits.size()) {
 		if (nextRank) {
-			if (digits[i] == '0')
+			if (a.digits[i] == '0')
 				newNumber.digits.push_back('9');
 			else {
-				newNumber.digits.push_back(digits[i] - nextRank);
+				newNumber.digits.push_back(a.digits[i] - nextRank);
 				nextRank = false;
 			}
 		}
 		else {
-			newNumber.digits.push_back(digits[i]);
+			newNumber.digits.push_back(a.digits[i]);
 		}
 
 		++i;
@@ -326,10 +326,10 @@ UnsignedBigInteger& UnsignedBigInteger::operator-=(const UnsignedBigInteger& b) 
 	return *this;
 }
 
-UnsignedBigInteger UnsignedBigInteger::operator*(const UnsignedBigInteger& b) const {
+UnsignedBigInteger operator*(const UnsignedBigInteger& a, const UnsignedBigInteger& b) {
 	UnsignedBigInteger newNumber;
 
-	if ((b.digits.size() == 1 && b.digits[0] == '0') || (digits.size() == 1 && digits[0] == '0')) {
+	if ((b.digits.size() == 1 && b.digits[0] == '0') || (a.digits.size() == 1 && a.digits[0] == '0')) {
 		return newNumber;
 	}
 	else {
@@ -338,7 +338,7 @@ UnsignedBigInteger UnsignedBigInteger::operator*(const UnsignedBigInteger& b) co
 
 	UnsignedBigInteger bufNumber;
 
-	for (size_t i = 0; i < digits.size(); ++i) {
+	for (size_t i = 0; i < a.digits.size(); ++i) {
 		bufNumber.digits.clear();
 		char dopNum = 0;
 
@@ -347,7 +347,7 @@ UnsignedBigInteger UnsignedBigInteger::operator*(const UnsignedBigInteger& b) co
 		}
 
 		for (size_t j = 0; j < b.digits.size(); ++j) {
-			char buf = (digits[i] - '0') * (b.digits[j] - '0') + dopNum;
+			char buf = (a.digits[i] - '0') * (b.digits[j] - '0') + dopNum;
 			bufNumber.digits.push_back(buf % 10 + '0');
 			dopNum = buf / 10;
 		}
@@ -396,7 +396,7 @@ UnsignedBigInteger& UnsignedBigInteger::operator*=(const UnsignedBigInteger& b) 
 	return *this;
 }
 
-UnsignedBigInteger UnsignedBigInteger::operator/(const UnsignedBigInteger& b) const {
+UnsignedBigInteger operator/(const UnsignedBigInteger& a, const UnsignedBigInteger& b) {
 	UnsignedBigInteger newNum;
 
 	if (b.digits.size() == 1 && b.digits[0] == '0') {
@@ -407,8 +407,8 @@ UnsignedBigInteger UnsignedBigInteger::operator/(const UnsignedBigInteger& b) co
 	newNum.digits.clear();
 	current.digits.clear();
 
-	for (int i = digits.size() - 1; i >= 0; --i) {
-		current.digits.insert(current.digits.begin(), digits[i]);
+	for (int i = a.digits.size() - 1; i >= 0; --i) {
+		current.digits.insert(current.digits.begin(), a.digits[i]);
 		if (current >= b) {
 			UnsignedBigInteger buf = b;
 			size_t j = 1;
@@ -490,13 +490,13 @@ UnsignedBigInteger& UnsignedBigInteger::operator/=(const UnsignedBigInteger& b) 
 	return *this;
 }
 
-UnsignedBigInteger UnsignedBigInteger::operator%(const UnsignedBigInteger& b) const {
-	UnsignedBigInteger newNum = operator-(operator/(b).operator*(b));
+UnsignedBigInteger operator%(const UnsignedBigInteger& a, const UnsignedBigInteger& b) {
+	UnsignedBigInteger newNum = a - a / b * b; //operator-(operator/(b).operator*(b))
 	return newNum;
 }
 
 UnsignedBigInteger& UnsignedBigInteger::operator%=(const UnsignedBigInteger& b) {
-	operator-=(operator/(b).operator*(b));
+	operator-=(*this / b * b); //operator/(b).operator*(b)
 	return *this;
 }
 

@@ -159,50 +159,50 @@ BigInteger BigInteger::operator--(int) {
 	return buf;
 }
 
-bool BigInteger::operator<(const BigInteger& b) const {
-	return (sign == b.sign) ? UnsignedBigInteger::operator<(b) : sign < b.sign;
+bool operator<(const BigInteger& a, const BigInteger& b){
+	return (a.sign == b.sign) ? (UnsignedBigInteger)a < (UnsignedBigInteger)b : a.sign < b.sign;
 }
 
-bool BigInteger::operator==(const BigInteger& b) const {
-	return !(*this < b) && !(b < *this);
+bool operator==(const BigInteger& a, const BigInteger& b) {
+	return !(a < b) && !(b < a);
 }
 
-bool BigInteger::operator!=(const BigInteger& b) const {
-	return !(*this == b);
+bool operator!=(const BigInteger& a, const BigInteger& b) {
+	return !(a == b);
 }
 
-bool BigInteger::operator>(const BigInteger& b) const {
-	return (*this >= b) && (*this != b);
+bool operator>(const BigInteger& a, const BigInteger& b) {
+	return (a >= b) && (a != b);
 }
 
-bool BigInteger::operator<=(const BigInteger& b) const {
-	return (*this < b) || (*this == b);
+bool operator<=(const BigInteger& a, const BigInteger& b) {
+	return (a < b) || (a == b);
 }
 
-bool BigInteger::operator>=(const BigInteger& b) const {
-	return !(*this < b);
+bool operator>=(const BigInteger& a, const BigInteger& b) {
+	return !(a < b);
 }
 
-BigInteger BigInteger::operator+(const BigInteger& b) const {
+BigInteger operator+(const BigInteger& a, const BigInteger& b) {
 	BigInteger newNumber;
 
-	if (sign == b.sign) {
-		UnsignedBigInteger buf = *this;
+	if (a.sign == b.sign) {
+		UnsignedBigInteger buf = a;
 		buf.operator+=(b);
 		newNumber = (BigInteger)buf;
-		newNumber.sign = sign;
+		newNumber.sign = a.sign;
 		return newNumber;
 	}
 
-	if (UnsignedBigInteger::operator<(b)) {
-		newNumber = (BigInteger)((UnsignedBigInteger)b).operator-(*this);
+	if ((UnsignedBigInteger)a < (UnsignedBigInteger)b) { //a<b
+		newNumber = (BigInteger)((UnsignedBigInteger)b - (UnsignedBigInteger)a);
 		newNumber.sign = b.sign;
 		return newNumber;
 	}
 
-	if (UnsignedBigInteger::operator>(b)) {
-		newNumber = (BigInteger)UnsignedBigInteger::operator-(b);
-		newNumber.sign = sign;
+	if ( (UnsignedBigInteger)a > (UnsignedBigInteger)b) {
+		newNumber = (BigInteger)((UnsignedBigInteger)a - (UnsignedBigInteger)b);
+		newNumber.sign = a.sign;
 		return newNumber;
 	}
 
@@ -215,7 +215,7 @@ BigInteger& BigInteger::operator+=(const BigInteger& b) {
 		return *this;
 	}
 
-	if (UnsignedBigInteger::operator>=(b)) {
+	if ( (UnsignedBigInteger)*this >= (UnsignedBigInteger) b) {
 		UnsignedBigInteger::operator-=(b);
 
 		if (isZero())
@@ -224,16 +224,16 @@ BigInteger& BigInteger::operator+=(const BigInteger& b) {
 		return *this;
 	}
 	else {
-		digits = ((BigInteger)((UnsignedBigInteger)b).operator-(*this)).digits;
+		digits = ((BigInteger)((UnsignedBigInteger)b - (UnsignedBigInteger) *this)).digits;
 		sign = b.sign;
 		return *this;
 	}
 }
 
-BigInteger BigInteger::operator-(const BigInteger& b) const {
+BigInteger operator-(const BigInteger& a, const BigInteger& b) {
 	BigInteger newNum = b;
 	newNum.sign ^= true;
-	newNum += *this;
+	newNum += a;
 	return newNum;
 }
 
@@ -244,12 +244,12 @@ BigInteger& BigInteger::operator-=(const BigInteger& b) {
 	return *this;
 }
 
-BigInteger BigInteger::operator*(const BigInteger& b) const {
-	BigInteger newNum = (BigInteger)UnsignedBigInteger::operator*(b);
+BigInteger operator*(const BigInteger& a, const BigInteger& b) {
+	BigInteger newNum = (BigInteger)((UnsignedBigInteger)a * (UnsignedBigInteger)b);
 	if (newNum.isZero()) {
 		return newNum;
 	}
-	newNum.sign = !(sign ^ b.sign);
+	newNum.sign = !(a.sign ^ b.sign);
 	return newNum;
 }
 
@@ -263,12 +263,12 @@ BigInteger& BigInteger::operator*=(const BigInteger& b) {
 	return *this;
 }
 
-BigInteger BigInteger::operator/(const BigInteger& b) const {
-	BigInteger newNum = (BigInteger)UnsignedBigInteger::operator/(b);
+BigInteger operator/(const BigInteger& a, const BigInteger& b) {
+	BigInteger newNum = (BigInteger)((UnsignedBigInteger) a / (UnsignedBigInteger) b);
 	if (newNum.isZero()) {
 		return newNum;
 	}
-	newNum.sign = !(sign ^ b.sign);
+	newNum.sign = !(a.sign ^ b.sign);
 	return newNum;
 }
 
@@ -286,13 +286,13 @@ bool BigInteger::isZero() const {
 	return digits.size() == 1 && digits[0] == '0';
 }
 
-BigInteger BigInteger::operator%(const BigInteger& b) const {
-	BigInteger newNum = operator-(operator/(b).operator*(b));
+BigInteger operator%(const BigInteger& a, const BigInteger& b) {
+	BigInteger newNum = a - a / b * b; //operator-(operator/(b).operator*(b));
 	return newNum;
 }
 
 BigInteger& BigInteger::operator%=(const BigInteger& b) {
-	operator-=(operator/(b).operator*(b));
+	operator-=(*this / b * b);  //operator/(b).operator*(b));
 	return *this;
 }
 
