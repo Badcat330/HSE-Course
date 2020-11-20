@@ -1,4 +1,4 @@
-#include <algorithm>
+    #include <algorithm>
 #include <iostream>
 #include <list>
 #include <random>
@@ -109,6 +109,7 @@ int main() {
     {
         task::list list;
         RandomFill(list, RandomUInt(1000, 5000));
+		//RandomFill(list, 5);
 
         task::list list2 = list;
 
@@ -146,6 +147,7 @@ int main() {
         task::list list_task2;
 
         RandomFill(list_task2, RandomUInt(1000, 5000), 100);
+        // RandomFill(list_task2, 100, 5);
 
         std::list<int> list_std2 = ToStdList(list_task2);
 

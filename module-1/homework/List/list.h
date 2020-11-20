@@ -17,8 +17,10 @@ namespace task
 				right = nullptr;
 			}
 
-			node(int _value, node* _left, node* _right) : value(_value), left(_left), right(_right)
-			{
+			node(int _value, node* _left, node* _right) {
+				value = _value;
+				left = _left;
+				right = _right;
 			}
 
 			int value;
@@ -40,6 +42,8 @@ namespace task
 		 * Linear in the size of the list
 		 */
 		~list();
+
+		list(const list& other);
 
 		/**
 		 * Linear in the size of *this and other.

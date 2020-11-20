@@ -71,6 +71,7 @@ void task::list::pop_front() {
 		delete head->left;
 		head->left = nullptr;
 		--container_size;
+		return;
 	}
 
 	if (container_size == 1) {
@@ -86,7 +87,7 @@ size_t task::list::size() const {
 }
 
 bool task::list::empty() const {
-	return head != nullptr;
+	return head == nullptr;
 }
 
 void task::list::clear() {
@@ -101,6 +102,8 @@ void task::list::clear() {
 		delete head;
 	}
 
+	head = nullptr;
+	tail = nullptr;
 	container_size = 0;
 }
 
@@ -147,19 +150,32 @@ void task::list::unique() {
 }
 
 task::list::node* task::list::delete_node(task::list::node* arg) {
-	arg->left->right = arg->right;
-	arg->right->left = arg->left;
+    node* buf = arg->right;
 
-	if (arg == head)
-		head = arg->right;
+    if(this->size() == 1) {
+        head = nullptr;
+        tail = nullptr;
+        --container_size;
+        return nullptr;
+    }
 
-	if (arg == tail)
-		tail = arg->left;
+    if (arg != head) {
+        if (arg == tail) {
+            tail = arg->left;
+            arg->left->right = nullptr;
+        } else {
+            arg->left->right = arg->right;
+            arg->right->left = arg->left;
+        }
+    } else {
+        head = arg->right;
+        arg->right->left = nullptr;
+    }
 
-	node* buf = arg->right;
-	delete arg;
-	--container_size;
-	return buf;
+    //TODO: find delete problem
+    //delete arg;
+    --container_size;
+    return buf;
 }
 
 void task::list::swap(task::list& other) {
@@ -186,6 +202,10 @@ void task::list::resize(size_t count) {
 }
 
 task::list& task::list::operator=(const task::list& other) {
+	if (this == &other) {
+		return *this;
+	}
+
 	node* current = head;
 	node* current_other = other.head;
 
@@ -206,6 +226,25 @@ task::list& task::list::operator=(const task::list& other) {
 	return *this;
 }
 
+task::list::list(const task::list& other) {
+	node* current = head;
+	node* current_other = other.head;
+
+	if (container_size > other.container_size)
+		resize(other.container_size);
+
+	while (current_other != nullptr) {
+		if (current == nullptr)
+			push_back(current_other->value);
+		else {
+			current->value = current_other->value;
+			current = current->right;
+		}
+
+		current_other = current_other->right;
+	}
+}
+
 void task::list::sort() {
 	list* answer = sort(this);
 	head = answer->head;
@@ -214,34 +253,50 @@ void task::list::sort() {
 }
 
 task::list* task::list::sort(task::list* collection) {
-	if (collection->size() == 1) {
+	if (collection->size() <= 1) {
 		return collection;
 	}
 
 	int pivot = collection->front();
 
-	list* less;
-	list* greater;
+	list* less = new list();
+	list* greater = new list();
 	node* buf = collection->head->right;
 
 	while (buf != nullptr) {
-		if(buf->value <= pivot)
+		node* tmp = buf->right;
+
+		if (buf->value <= pivot)
 			less->push_back(buf);
 		else
 			greater->push_back(buf);
 
-		buf = buf->right;
+		buf = tmp;
 	}
 
 	less = sort(less);
 	greater = sort(greater);
-	list* answer;
-	answer->head = less->head;
-	less->tail->right = collection->head;
-	collection->head->left = less->tail;
+	list* answer = new list();
+
+	if(less->head) {
+        answer->head = less->head;
+        less->tail->right = collection->head;
+        collection->head->left = less->tail;
+    }
+	else {
+	    answer->head = collection->head;
+    }
+
 	collection->head->right = greater->head;
-	greater->head->left = collection->head;
-	answer->tail = greater->tail;
+
+	if(greater->head) {
+        greater->head->left = collection->head;
+        answer->tail = greater->tail;
+    }
+	else{
+	    answer->tail = collection->head;
+	}
+
 	answer->container_size = less->size() + greater->size() + 1;
 	return answer;
 }
