@@ -58,9 +58,8 @@ void task::list::push_front(const int& value) {
 		head = newNode;
 	}
 	else {
-		head = newNode;
-		tail = newNode;
-
+	    head = newNode;
+	    tail = newNode;
 	}
 	++container_size;
 }
@@ -130,10 +129,7 @@ const int& task::list::back() const {
 void task::list::remove(int value) {
 	node* current = head;
 	while (current != nullptr) {
-		if (value == current->value)
-			current = delete_node(current);
-		else
-			current = current->right;
+		current = value == current->value ? delete_node(current) : current->right;
 	}
 }
 
@@ -178,7 +174,7 @@ void task::list::swap(task::list& other) {
 	other.tail = tail;
 	tail = buf;
 
-	int bufInt = other.container_size;
+	size_t bufInt = other.container_size;
 	other.container_size = container_size;
 	container_size = bufInt;
 }
@@ -280,8 +276,9 @@ task::list* task::list::sort(task::list* collection) {
 		greater->head->left = collection->head;
 		answer->tail = greater->tail;
 	}
-	else
-		answer->tail = collection->head;
+	else {
+        answer->tail = collection->head;
+    }
 
 	answer->container_size = less->size() + greater->size() + 1;
 	return answer;
