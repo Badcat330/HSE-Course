@@ -1,9 +1,8 @@
 #include "list.h"
 
 task::list::list(size_t count, const int& value) {
-	for (size_t i = 0; i < count; ++i) {
+	for (size_t i = 0; i < count; ++i)
 		push_back(value);
-	}
 }
 
 void task::list::push_back(const int& value) {
@@ -127,15 +126,13 @@ const int& task::list::back() const {
 	return tail->value;
 }
 
-void task::list::remove(const int& value) {
+void task::list::remove(int value) {
 	node* current = head;
 	while (current != nullptr) {
-		if (value == current->value) {
+		if (value == current->value)
 			current = delete_node(current);
-		}
-		else {
+		else
 			current = current->right;
-		}
 	}
 }
 
@@ -152,28 +149,20 @@ void task::list::unique() {
 task::list::node* task::list::delete_node(task::list::node* arg) {
     node* buf = arg->right;
 
-    if(this->size() == 1) {
-        head = nullptr;
-        tail = nullptr;
-        --container_size;
-        return nullptr;
+    if(arg == head) {
+        pop_front();
+        return buf;
     }
 
-    if (arg != head) {
-        if (arg == tail) {
-            tail = arg->left;
-            arg->left->right = nullptr;
-        } else {
-            arg->left->right = arg->right;
-            arg->right->left = arg->left;
-        }
-    } else {
-        head = arg->right;
-        arg->right->left = nullptr;
+    if(arg == tail) {
+        pop_back();
+        return buf;
     }
 
-    //TODO: find delete problem
-    //delete arg;
+    arg->left->right = arg->right;
+    arg->right->left = arg->left;
+
+    delete arg;
     --container_size;
     return buf;
 }
@@ -202,9 +191,9 @@ void task::list::resize(size_t count) {
 }
 
 task::list& task::list::operator=(const task::list& other) {
-	if (this == &other) {
+	if (this == &other)
 		return *this;
-	}
+
 
 	node* current = head;
 	node* current_other = other.head;
@@ -253,9 +242,8 @@ void task::list::sort() {
 }
 
 task::list* task::list::sort(task::list* collection) {
-	if (collection->size() <= 1) {
+	if (collection->size() <= 1)
 		return collection;
-	}
 
 	int pivot = collection->front();
 
@@ -283,9 +271,8 @@ task::list* task::list::sort(task::list* collection) {
         less->tail->right = collection->head;
         collection->head->left = less->tail;
     }
-	else {
+	else
 	    answer->head = collection->head;
-    }
 
 	collection->head->right = greater->head;
 
@@ -293,9 +280,8 @@ task::list* task::list::sort(task::list* collection) {
         greater->head->left = collection->head;
         answer->tail = greater->tail;
     }
-	else{
+	else
 	    answer->tail = collection->head;
-	}
 
 	answer->container_size = less->size() + greater->size() + 1;
 	return answer;

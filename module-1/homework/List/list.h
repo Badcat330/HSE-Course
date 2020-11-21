@@ -17,11 +17,10 @@ namespace task
 				right = nullptr;
 			}
 
-			node(int _value, node* _left, node* _right) {
-				value = _value;
-				left = _left;
-				right = _right;
-			}
+			node(int _value, node* _left, node* _right) :
+			value(_value),
+			left(_left),
+			right(_right) {}
 
 			int value;
 			node* left;
@@ -127,7 +126,7 @@ namespace task
 		 * Complexity: Linear in the size of the container
 		 * @param value 	value of the elements to remove
 		 */
-		void remove(const int& value);
+		void remove(int value);
 
 		/**
 		 * Removes all consecutive duplicate elements from the container.
