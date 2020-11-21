@@ -1,8 +1,7 @@
-    #include <algorithm>
+#include <algorithm>
 #include <iostream>
 #include <list>
 #include <random>
-#include <string>
 #include <vector>
 
 #include "list.h"
@@ -217,6 +216,9 @@ int main() {
 						ASSERT_EQUAL_MSG(ToStdList(lists_task[list]), lists_std[list], "list::sort")
                         break;
                     }
+					default: {
+						break;
+					}
                 }
             }
         }
