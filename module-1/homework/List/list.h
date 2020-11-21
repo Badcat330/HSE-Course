@@ -18,9 +18,10 @@ namespace task
 			}
 
 			node(int _value, node* _left, node* _right) :
-			value(_value),
-			left(_left),
-			right(_right) {}
+				value(_value),
+				left(_left),
+				right(_right) {
+			}
 
 			int value;
 			node* left;

@@ -40,6 +40,7 @@ void task::list::pop_back() {
 		delete tail->right;
 		tail->right = nullptr;
 		--container_size;
+		return;
 	}
 
 	if (container_size == 1) {
@@ -147,24 +148,24 @@ void task::list::unique() {
 }
 
 task::list::node* task::list::delete_node(task::list::node* arg) {
-    node* buf = arg->right;
+	node* buf = arg->right;
 
-    if(arg == head) {
-        pop_front();
-        return buf;
-    }
+	if (arg == head) {
+		pop_front();
+		return buf;
+	}
 
-    if(arg == tail) {
-        pop_back();
-        return buf;
-    }
+	if (arg == tail) {
+		pop_back();
+		return buf;
+	}
 
-    arg->left->right = arg->right;
-    arg->right->left = arg->left;
+	arg->left->right = arg->right;
+	arg->right->left = arg->left;
 
-    delete arg;
-    --container_size;
-    return buf;
+	delete arg;
+	--container_size;
+	return buf;
 }
 
 void task::list::swap(task::list& other) {
@@ -193,7 +194,6 @@ void task::list::resize(size_t count) {
 task::list& task::list::operator=(const task::list& other) {
 	if (this == &other)
 		return *this;
-
 
 	node* current = head;
 	node* current_other = other.head;
@@ -266,22 +266,22 @@ task::list* task::list::sort(task::list* collection) {
 	greater = sort(greater);
 	list* answer = new list();
 
-	if(less->head) {
-        answer->head = less->head;
-        less->tail->right = collection->head;
-        collection->head->left = less->tail;
-    }
+	if (less->head) {
+		answer->head = less->head;
+		less->tail->right = collection->head;
+		collection->head->left = less->tail;
+	}
 	else
-	    answer->head = collection->head;
+		answer->head = collection->head;
 
 	collection->head->right = greater->head;
 
-	if(greater->head) {
-        greater->head->left = collection->head;
-        answer->tail = greater->tail;
-    }
+	if (greater->head) {
+		greater->head->left = collection->head;
+		answer->tail = greater->tail;
+	}
 	else
-	    answer->tail = collection->head;
+		answer->tail = collection->head;
 
 	answer->container_size = less->size() + greater->size() + 1;
 	return answer;
