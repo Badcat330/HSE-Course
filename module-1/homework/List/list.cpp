@@ -1,5 +1,6 @@
 #include "list.h"
-
+namespace task {
+	
 task::list::list(size_t count, const int& value) {
 	for (size_t i = 0; i < count; ++i)
 		push_back(value);
@@ -198,8 +199,9 @@ task::list& task::list::operator=(const task::list& other) {
 		resize(other.container_size);
 
 	while (current_other != nullptr) {
-		if (current == nullptr)
+		if (current == nullptr) {
 			push_back(current_other->value);
+		}
 		else {
 			current->value = current_other->value;
 			current = current->right;
@@ -219,8 +221,9 @@ task::list::list(const task::list& other) {
 		resize(other.container_size);
 
 	while (current_other != nullptr) {
-		if (current == nullptr)
+		if (current == nullptr) {
 			push_back(current_other->value);
+		}
 		else {
 			current->value = current_other->value;
 			current = current->right;
@@ -267,8 +270,9 @@ task::list* task::list::sort(task::list* collection) {
 		less->tail->right = collection->head;
 		collection->head->left = less->tail;
 	}
-	else
+	else {
 		answer->head = collection->head;
+	}
 
 	collection->head->right = greater->head;
 
@@ -282,4 +286,5 @@ task::list* task::list::sort(task::list* collection) {
 
 	answer->container_size = less->size() + greater->size() + 1;
 	return answer;
+}
 }
