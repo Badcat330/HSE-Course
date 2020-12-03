@@ -1,9 +1,9 @@
 #include "shape.h"
 
-class Polygon: public Shape {
+class Polygon: private Shape {
  public:
 	Polygon() = delete;
-	Polygon(std::vector<Point>& points);
+	explicit Polygon(std::vector<Point>& points);
 	Polygon(const Polygon& origin);
 	Polygon& operator=(const Polygon& origin);
 	~Polygon();
