@@ -2,7 +2,6 @@
 #include <iostream>
 #include <list>
 #include <random>
-#include <string>
 #include <vector>
 
 #include "list.h"
@@ -166,7 +165,7 @@ int main() {
         const size_t ITER_COUNT = 30000;
 
         std::vector<task::list> lists_task(LIST_COUNT);
-        std::vector<std::list<int>> lists_std(LIST_COUNT);
+        std::vector< std::list<int> > lists_std(LIST_COUNT);
 
         for (size_t iter = 0; iter < ITER_COUNT; ++iter) {
             for (size_t list = 0; list < LIST_COUNT; ++list) {
@@ -176,35 +175,50 @@ int main() {
                         // Random Push
                         auto val = RandomUInt();
                         if (TossCoin()) {
+							std::cout << "push_back" << std::endl;
                             lists_task[list].push_back(val);
                             lists_std[list].push_back(val);
+							ASSERT_EQUAL_MSG(ToStdList(lists_task[list]), lists_std[list], "list::push_back")
                         } else {
+							std::cout << "push_front" << std::endl;
                             lists_task[list].push_front(val);
                             lists_std[list].push_front(val);
+                            ASSERT_EQUAL_MSG(ToStdList(lists_task[list]), lists_std[list], "list::push_front")
                         }
                         break;
                     }
                     case 1: {
                         // Random Pop
                         if (TossCoin()) {
+                        	std::cout << "pop_back" << std::endl;
                             lists_task[list].pop_back();
                             lists_std[list].pop_back();
+							ASSERT_EQUAL_MSG(ToStdList(lists_task[list]), lists_std[list], "list::pop_back")
                         } else {
+							std::cout << "pop_front" << std::endl;
                             lists_task[list].pop_front();
                             lists_std[list].pop_front();
+							ASSERT_EQUAL_MSG(ToStdList(lists_task[list]), lists_std[list], "list::pop_front")
                         }
                         break;
                     }
                     case 2: {
+						std::cout << "remove" << std::endl;
                         lists_task[list].remove(lists_task[list].back());
                         lists_std[list].remove(lists_std[list].back());
+						ASSERT_EQUAL_MSG(ToStdList(lists_task[list]), lists_std[list], "list::remove")
                         break;
                     } 
                     case 3: {
+						std::cout << "sort" << std::endl;
                         lists_task[list].sort();
                         lists_std[list].sort();
+						ASSERT_EQUAL_MSG(ToStdList(lists_task[list]), lists_std[list], "list::sort")
                         break;
                     }
+					default: {
+						break;
+					}
                 }
             }
         }
