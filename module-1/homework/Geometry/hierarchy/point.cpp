@@ -1,3 +1,4 @@
+#include <cmath>
 #include "point.h"
 
 bool operator==(const Point& a, const Point& b) {
@@ -8,4 +9,10 @@ bool operator!=(const Point& a, const Point& b) {
 	return !(a == b);
 }
 
+double Point::distance(Point p) const{
+	return  sqrt(pow(p.x - x, 2) +  pow(p.y - y, 2));
+}
 
+Point::Point(double _x, double _y): x(_x), y(_y) {
+
+}
