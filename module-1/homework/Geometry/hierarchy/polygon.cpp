@@ -143,12 +143,12 @@ bool Polygon::containsPoint(Point point) const {
                      point.x * (points[i1].y - points[i].y));
 
             if(S == S1 + S2 + S3) {
-                flag = 1;
+                flag = true;
                 break;
             }
         }
 
-        if (flag == 0)
+        if (!flag)
             break;
     }
 
@@ -156,8 +156,17 @@ bool Polygon::containsPoint(Point point) const {
 }
 
 void Polygon::rotate(Point center, double angle) {
+    for(size_t i = 0; i < verticesCount(); ++i) {
+        points[i].x = ((points[i].x - center.x) * cos(angle) - (points[i].y - center.y) * sin(angle)) + center.x;
+        points[i].y = ((points[i].x - center.x) * sin(angle) + (points[i].y - center.y) * cos(angle)) + center.y;
+    }
+}
+
+void Polygon::reflex(Point center) {
 
 }
+
+
 
 
 
