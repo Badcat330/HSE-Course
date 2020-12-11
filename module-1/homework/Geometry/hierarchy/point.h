@@ -1,3 +1,6 @@
+#ifndef GEOMETRY_POINT_H
+#define GEOMETRY_POINT_H
+
 struct Point {
 
     Point(double _x, double _y);
@@ -10,3 +13,5 @@ struct Point {
 	double x;
 	double y;
 };
+
+#endif //GEOMETRY_POINT_H

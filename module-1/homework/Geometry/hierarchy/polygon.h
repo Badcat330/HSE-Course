@@ -1,5 +1,8 @@
 #include "shape.h"
 
+#ifndef GEOMETRY_POLYGON_H
+#define GEOMETRY_POLYGON_H
+
 class Polygon: public Shape {
  public:
 	explicit Polygon(std::vector<Point>& points);
@@ -26,3 +29,5 @@ class Polygon: public Shape {
     Polygon() = default;
 	std::vector<Point> points;
 };
+
+#endif //GEOMETRY_POLYGON_H

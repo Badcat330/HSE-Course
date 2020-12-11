@@ -1,6 +1,9 @@
 #include "point.h"
 #include "line.h"
 
+#ifndef GEOMETRY_SHAPE_H
+#define GEOMETRY_SHAPE_H
+
 class Shape {
  public:
 	// периметр фигуры
@@ -24,3 +27,5 @@ class Shape {
 	// гомотетия данной фигуры с центром в center и коэффициентом coefficient
 	virtual void scale(Point center, double coefficient) = 0;
 };
+
+#endif //GEOMETRY_SHAPE_H

@@ -1,5 +1,8 @@
 #include "polygon.h"
 
+#ifndef GEOMETRY_RECTANGLE_H
+#define GEOMETRY_RECTANGLE_H
+
 class Rectangle: protected Polygon {
 public:
 	Rectangle(std::pair<Point, Point> points, double attitude);
@@ -13,3 +16,5 @@ public:
 protected:
     Rectangle() = default;
 };
+
+#endif //GEOMETRY_RECTANGLE_H

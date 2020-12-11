@@ -2,6 +2,9 @@
 #include "polygon.h"
 #include "point.h"
 
+#ifndef GEOMETRY_TRIANGLE_H
+#define GEOMETRY_TRIANGLE_H
+
 class Triangle: protected Polygon {
 	Triangle() = delete;
 	Triangle(Point x, Point y, Point z);
@@ -13,3 +16,5 @@ class Triangle: protected Polygon {
 	Circle circumscribedCircle();
 	Circle inscribedCircle();
 };
+
+#endif //GEOMETRY_TRIANGLE_H

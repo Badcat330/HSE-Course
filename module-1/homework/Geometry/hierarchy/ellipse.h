@@ -1,16 +1,23 @@
+#include <utility>
+#include <cmath>
 
+#include "const.h"
+#include "shape.h"
+
+#ifndef GEOMETRY_ELLIPSE_H
+#define GEOMETRY_ELLIPSE_H
 
 class Ellipse: public Shape {
  public:
-	Ellipse() = delete;
-	Ellipse(std::pair<Point,Point> focuses, double focusSum);
+    Ellipse() = delete;
+	Ellipse(std::pair<Point,Point> _focuses, double _focusSum);
 	Ellipse(const Ellipse& origin);
 	Ellipse& operator=(const Ellipse& origin);
-	~Ellipse();
+	~Ellipse()=default;
 
 	double area() const override;
 	double perimeter() const override;
-	bool operator==(const Shape& another) const override; // TODO проверить корректность работы
+	bool operator==(const Shape& another) const override;
 	bool isCongruentTo(const Shape &another) const override;
 	bool isSimilarTo(const Shape &another) const override;
 	bool containsPoint(Point point) const override;
@@ -21,10 +28,15 @@ class Ellipse: public Shape {
 
 	std::pair<Point,Point> getFocuses(); // фокусы эллипса
 	std::pair<Line, Line> directrices(); // пара директрис эллипса
-	double eccentricity(); // эксцентриситет
-	Point center(); // центр эллипса
+	double eccentricity() const; // эксцентриситет
+	Point center() const; // центр эллипса
 
  protected:
 	std::pair<Point,Point> focuses;
 	double focusSum;
+	double a;
+	double b;
+	double c;
 };
+
+#endif //GEOMETRY_ELLIPSE_H

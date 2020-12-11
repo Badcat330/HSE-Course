@@ -1,6 +1,9 @@
 #include "rectangle.h"
 #include "circle.h"
 
+#ifndef GEOMETRY_SQUARE_H
+#define GEOMETRY_SQUARE_H
+
 class Square: protected Rectangle {
 public:
 	Square() = delete;
@@ -12,3 +15,5 @@ public:
 	Circle circumscribedCircle();
 	Circle inscribedCircle();
 };
+
+#endif
