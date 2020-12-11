@@ -1,4 +1,3 @@
-#include <cstdlib>
 #include <utility>
 
 #include "rectangle.h"
@@ -16,5 +15,15 @@ std::pair<Line, Line> Rectangle::diagonals() {
 
 Point Rectangle::center() {
     return Point((points[0].x + points[2].x) / 2, (points[0].y + points[2].y) / 2);
+}
+
+Rectangle::Rectangle(const Rectangle &origin) {
+    points = origin.points;
+}
+
+Rectangle &Rectangle::operator=(const Rectangle &origin) {
+    points = origin.points;
+
+    return *this;
 }
 
