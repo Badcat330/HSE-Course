@@ -134,7 +134,7 @@ bool Polygon::containsPoint(Point point) const {
             size_t i2 = (j + i + 1) % verticesCount();
 
             S = abs(points[i1].x * (points[i2].y - points[i].y) + points[i2].x * (points[i].y - points[i1].y) +
-                     points[i].x * (points[i1].y - points[i2].y));
+                    points[i].x * (points[i1].y - points[i2].y));
             S1 = abs(points[i1].x * (points[i2].y - point.y) + points[i2].x * (point.y - points[i1].y) +
                      point.x * (points[i1].y - points[i2].y));
             S2 = abs(points[i].x * (points[i2].y - point.y) + points[i2].x * (point.y - points[i].y) +
@@ -142,7 +142,7 @@ bool Polygon::containsPoint(Point point) const {
             S3 = abs(points[i1].x * (points[i].y - point.y) + points[i].x * (point.y - points[i1].y) +
                      point.x * (points[i1].y - points[i].y));
 
-            if(S == S1 + S2 + S3) {
+            if (S == S1 + S2 + S3) {
                 flag = true;
                 break;
             }
@@ -156,15 +156,43 @@ bool Polygon::containsPoint(Point point) const {
 }
 
 void Polygon::rotate(Point center, double angle) {
-    for(size_t i = 0; i < verticesCount(); ++i) {
+    for (size_t i = 0; i < verticesCount(); ++i) {
         points[i].x = ((points[i].x - center.x) * cos(angle) - (points[i].y - center.y) * sin(angle)) + center.x;
         points[i].y = ((points[i].x - center.x) * sin(angle) + (points[i].y - center.y) * cos(angle)) + center.y;
     }
 }
 
 void Polygon::reflex(Point center) {
-
+    for (size_t i = 0; i < verticesCount(); ++i) {
+        points[i].x = 2 * center.x - points[i].x;
+        points[i].y = 2 * center.y - points[i].y;
+    }
 }
+
+void Polygon::reflex(Line axis) {
+    for (size_t i = 0; i < verticesCount(); ++i) {
+        Point a = axis.a;
+        Point b = axis.b;
+        Point c = points[i];
+        double v_x = b.y - a.y;
+        double v_y = a.x - b.x;
+        double k = (a.x * b.y - b.x * a.y + a.y * c.x - b.y * c.x + b.x * c.y - a.x * c.y) /
+                   (v_x * (b.y - a.y) + v_y * (a.x - b.x));
+        double p_x = c.x + v_x * k;
+        double p_y = c.y +v_y * k;
+        points[i].x = 2 * p_x - points[i].x;
+        points[i].y = 2 * p_y - points[i].y;
+    }
+}
+
+void Polygon::scale(Point center, double coefficient) {
+    for (size_t i = 0; i < verticesCount(); ++i) {
+        points[i].x = coefficient * (points[i].x - center.x) + center.x;
+        points[i].y = coefficient * (points[i].y - center.y) + center.y;
+    }
+}
+
+
 
 
 
