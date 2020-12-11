@@ -2,7 +2,6 @@
 
 class Polygon: public Shape {
  public:
-	Polygon() = delete;
 	explicit Polygon(std::vector<Point>& points);
 	Polygon(const Polygon& origin);
 	Polygon& operator=(const Polygon& origin);
@@ -24,5 +23,6 @@ class Polygon: public Shape {
 	bool isConvex() const; // метод проверяющий "являться выпуклым"
 
  protected:
+    Polygon() = default;
 	std::vector<Point> points;
 };
