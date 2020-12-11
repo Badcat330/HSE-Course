@@ -8,12 +8,12 @@ class Ellipse: public Shape {
 	Ellipse& operator=(const Ellipse& origin);
 	~Ellipse();
 
-	double area() override;
-	double perimeter() override;
-	bool operator==(const Shape& another) override; // TODO проверить корректность работы
-	bool isCongruentTo(const Shape &another) override;
-	bool isSimilarTo(const Shape &another) override;
-	bool containsPoint(Point point) override;
+	double area() const override;
+	double perimeter() const override;
+	bool operator==(const Shape& another) const override; // TODO проверить корректность работы
+	bool isCongruentTo(const Shape &another) const override;
+	bool isSimilarTo(const Shape &another) const override;
+	bool containsPoint(Point point) const override;
 	void rotate(Point center, double angle) override;
 	void reflex(Point center) override;
 	void reflex(Line axis) override;
