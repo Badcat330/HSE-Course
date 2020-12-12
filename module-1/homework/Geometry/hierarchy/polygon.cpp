@@ -79,22 +79,22 @@ bool Polygon::isSimilarTo(const Shape &another) const {
 }
 
 bool Polygon::operator==(const Shape &another) const {
-    const auto* polygon_another = dynamic_cast<const Polygon*>(&another);
+    const auto *polygon_another = dynamic_cast<const Polygon *>(&another);
 
-    if(polygon_another) {
+    if (polygon_another) {
         if (verticesCount() != polygon_another->verticesCount())
             return false;
 
         size_t offset = verticesCount();
 
         for (size_t i = 0; i < verticesCount(); ++i) {
-             if (points[0] == polygon_another->points[i]) {
-                 offset = i;
-                 break;
-             }
+            if (points[0] == polygon_another->points[i]) {
+                offset = i;
+                break;
+            }
         }
 
-        if(offset == verticesCount())
+        if (offset == verticesCount())
             return false;
 
         for (size_t i = 0; i < verticesCount(); ++i) {
@@ -197,7 +197,7 @@ void Polygon::reflex(Line axis) {
         double k = (a.x * b.y - b.x * a.y + a.y * c.x - b.y * c.x + b.x * c.y - a.x * c.y) /
                    (v_x * (b.y - a.y) + v_y * (a.x - b.x));
         double p_x = c.x + v_x * k;
-        double p_y = c.y +v_y * k;
+        double p_y = c.y + v_y * k;
         points[i].x = 2 * p_x - points[i].x;
         points[i].y = 2 * p_y - points[i].y;
     }

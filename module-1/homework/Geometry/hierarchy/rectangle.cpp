@@ -2,7 +2,7 @@
 
 #include "rectangle.h"
 
-Rectangle::Rectangle(std::pair <Point, Point> point, double attitude){
+Rectangle::Rectangle(std::pair<Point, Point> point, double attitude) {
     points.push_back(point.first);
     points.push_back(Point(point.first.x, point.second.y));
     points.push_back(point.second);

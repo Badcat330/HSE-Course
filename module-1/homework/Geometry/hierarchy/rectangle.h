@@ -3,15 +3,18 @@
 #ifndef GEOMETRY_RECTANGLE_H
 #define GEOMETRY_RECTANGLE_H
 
-class Rectangle: public Polygon {
+class Rectangle : public Polygon {
 public:
-	Rectangle(std::pair<Point, Point> points, double attitude);
-	Rectangle(const Rectangle& origin);
-	Rectangle& operator=(const Rectangle& origin);
-	~Rectangle() = default;
+    Rectangle(std::pair<Point, Point> points, double attitude);
 
-	Point center(); // центр круга
-	std::pair<Line, Line> diagonals(); // пара диагоналей
+    Rectangle(const Rectangle &origin);
+
+    Rectangle &operator=(const Rectangle &origin);
+
+    ~Rectangle() = default;
+
+    Point center(); // центр круга
+    std::pair<Line, Line> diagonals(); // пара диагоналей
 
 protected:
     Rectangle() = default;

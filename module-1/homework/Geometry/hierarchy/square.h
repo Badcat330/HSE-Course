@@ -4,16 +4,21 @@
 #ifndef GEOMETRY_SQUARE_H
 #define GEOMETRY_SQUARE_H
 
-class Square: protected Rectangle {
+class Square : protected Rectangle {
 public:
-	Square() = delete;
-	Square(std::pair<Point, Point> points);
-	Square(const Square& origin);
-	Square& operator=(const Square& origin);
-	~Square() = default;
+    Square() = delete;
 
-	Circle circumscribedCircle();
-	Circle inscribedCircle();
+    Square(std::pair<Point, Point> points);
+
+    Square(const Square &origin);
+
+    Square &operator=(const Square &origin);
+
+    ~Square() = default;
+
+    Circle circumscribedCircle();
+
+    Circle inscribedCircle();
 };
 
 #endif

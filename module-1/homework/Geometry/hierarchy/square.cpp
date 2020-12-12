@@ -2,7 +2,7 @@
 
 #include"square.h"
 
-Square::Square(std::pair <Point, Point> point) {
+Square::Square(std::pair<Point, Point> point) {
     points.push_back(point.first);
     points.push_back(Point(point.first.x, point.second.y));
     points.push_back(point.second);
@@ -19,13 +19,13 @@ Square &Square::operator=(const Square &origin) {
 }
 
 Circle Square::inscribedCircle() {
-    Point p_r = Point((points[0].x + points[2].x)/2, (points[0].y + points[2].y)/2);
+    Point p_r = Point((points[0].x + points[2].x) / 2, (points[0].y + points[2].y) / 2);
     double r = p_r.distance(points[0]);
     return Circle(p_r, r);
 }
 
 Circle Square::circumscribedCircle() {
-    Point p_r = Point((points[0].x + points[2].x)/2, (points[0].y + points[2].y)/2);
+    Point p_r = Point((points[0].x + points[2].x) / 2, (points[0].y + points[2].y) / 2);
     double r = points[0].distance(points[2]) / 2;
     return Circle(p_r, r);
 }
