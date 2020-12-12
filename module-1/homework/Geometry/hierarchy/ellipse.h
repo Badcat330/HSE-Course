@@ -26,7 +26,6 @@ class Ellipse: public Shape {
 	void scale(Point center, double coefficient) override;
 
 	std::pair<Point,Point> getFocuses(); // фокусы эллипса
-	//std::pair<Line, Line> directrices(); // пара директрис эллипса
 	double eccentricity() const; // эксцентриситет
 	Point center() const; // центр эллипса
 

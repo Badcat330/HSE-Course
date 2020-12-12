@@ -130,4 +130,3 @@ bool Ellipse::isCongruentTo(const Shape &another) const {
 
     return false;
 }
-
