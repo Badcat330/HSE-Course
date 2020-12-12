@@ -1,14 +1,18 @@
 #include "ellipse.h"
 
-Ellipse::Ellipse(std::pair<Point, Point> _focuses, double _focusSum) : focuses(_focuses), focusSum(_focusSum) {
+#include <utility>
+
+Ellipse::Ellipse(std::pair<Point, Point> _focuses, double _focusSum) : focuses(std::move(_focuses)),
+                                                                       focusSum(_focusSum) {
     a = focusSum / 2;
-    c = focuses.first.distance(focuses.second);
+    c = focuses.first.distance(focuses.second) / 2;
     b = std::sqrt(a * a - c * c);
 }
 
-Ellipse::Ellipse(const Ellipse &origin) {
-    focuses = origin.focuses;
-    focusSum = origin.focusSum;
+Ellipse::Ellipse(const Ellipse &origin) : focuses(origin.focuses), focusSum(origin.focusSum) {
+    a = origin.a;
+    b = origin.b;
+    c = origin.c;
 }
 
 Ellipse &Ellipse::operator=(const Ellipse &origin) {
@@ -21,17 +25,12 @@ std::pair<Point, Point> Ellipse::getFocuses() {
     return focuses;
 }
 
-std::pair<Line, Line> Ellipse::directrices() {
-    //TODO
-    return std::pair<Line, Line>();
-}
-
 double Ellipse::eccentricity() const {
     return c / a;
 }
 
 Point Ellipse::center() const {
-    return Point{(focuses.first.x + focuses.second.x) / 2, (focuses.first.y + focuses.second.y) / 2};
+    return {(focuses.first.x + focuses.second.x) / 2, (focuses.first.y + focuses.second.y) / 2};
 }
 
 double Ellipse::area() const {
@@ -43,9 +42,9 @@ double Ellipse::perimeter() const {
 }
 
 bool Ellipse::operator==(const Shape &another) const {
-    const auto* ellipse_another = dynamic_cast<const Ellipse*>(&another);
+    const auto *ellipse_another = dynamic_cast<const Ellipse *>(&another);
 
-    if(ellipse_another) {
+    if (ellipse_another) {
         return focuses.first == ellipse_another->focuses.first && focuses.second == ellipse_another->focuses.second &&
                focusSum == ellipse_another->focusSum;
     }
@@ -54,14 +53,20 @@ bool Ellipse::operator==(const Shape &another) const {
 }
 
 void Ellipse::rotate(Point center, double angle) {
+    double x = focuses.first.x;
+    double y = focuses.first.y;
     focuses.first.x =
-            ((focuses.first.x - center.x) * cos(angle) - (focuses.first.y - center.y) * sin(angle)) + center.x;
+            ((x - center.x) * cos(angle) - (y - center.y) * sin(angle)) + center.x;
     focuses.first.y =
-            ((focuses.first.x - center.x) * sin(angle) + (focuses.first.y - center.y) * cos(angle)) + center.y;
+            ((x - center.x) * sin(angle) + (y - center.y) * cos(angle)) + center.y;
+
+    x = focuses.second.x;
+    y = focuses.second.y;
+
     focuses.second.x =
-            ((focuses.second.x - center.x) * cos(angle) - (focuses.second.y - center.y) * sin(angle)) + center.x;
+            ((x - center.x) * cos(angle) - (y - center.y) * sin(angle)) + center.x;
     focuses.second.y =
-            ((focuses.second.x - center.x) * sin(angle) + (focuses.second.y - center.y) * cos(angle)) + center.y;
+            ((x - center.x) * sin(angle) + (y - center.y) * cos(angle)) + center.y;
 }
 
 void Ellipse::reflex(Point center) {
@@ -102,11 +107,11 @@ void Ellipse::scale(Point center, double coefficient) {
 }
 
 bool Ellipse::containsPoint(Point point) const {
-    return pow(point.x, 2) / pow(a, 2) + pow(point.y, 2) / pow(b, 2) <= 1;
+    return focuses.first.distance(point) + focuses.second.distance(point) <= focusSum;
 }
 
 bool Ellipse::isSimilarTo(const Shape &another) const {
-    const auto* ellipse_another = dynamic_cast<const Ellipse*>(&another);
+    const auto *ellipse_another = dynamic_cast<const Ellipse *>(&another);
 
     if (ellipse_another) {
         return a / ellipse_another->a == b / ellipse_another->b;
@@ -116,7 +121,7 @@ bool Ellipse::isSimilarTo(const Shape &another) const {
 }
 
 bool Ellipse::isCongruentTo(const Shape &another) const {
-    const auto* ellipse_another = dynamic_cast<const Ellipse*>(&another);
+    const auto *ellipse_another = dynamic_cast<const Ellipse *>(&another);
 
     if (ellipse_another) {
         double k = a / ellipse_another->a;

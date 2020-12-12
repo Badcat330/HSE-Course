@@ -1,3 +1,5 @@
+#include "const.h"
+
 #ifndef GEOMETRY_POINT_H
 #define GEOMETRY_POINT_H
 

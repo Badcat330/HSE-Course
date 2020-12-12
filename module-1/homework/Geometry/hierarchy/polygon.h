@@ -1,4 +1,7 @@
+#include <vector>
+
 #include "shape.h"
+#include "const.h"
 
 #ifndef GEOMETRY_POLYGON_H
 #define GEOMETRY_POLYGON_H

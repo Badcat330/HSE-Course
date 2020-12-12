@@ -2,7 +2,7 @@
 #include "point.h"
 
 bool operator==(const Point& a, const Point& b) {
-	return (a.x == b.x) && (a.y == b.y);
+	return fabs(a.x - b.x) < Consts::EPS && fabs(a.y - b.y) < Consts::EPS;
 }
 
 bool operator!=(const Point& a, const Point& b) {

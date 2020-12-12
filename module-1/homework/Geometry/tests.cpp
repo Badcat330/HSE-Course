@@ -198,7 +198,7 @@ TEST(Rectangle, Test1) {
     Point c(1.0, 3.0);
     double ratio = 0.5;
     
-    Rectangle rectangle(a, b, ratio);
+    Rectangle rectangle({a, b}, ratio);
     Triangle triangle(a, b, c);
     ASSERT_NEAR(rectangle.area(), 2 * triangle.area(), 1e-6);
 }
@@ -219,14 +219,14 @@ TEST(ContainsPoint, Test2) {
     Point a(-1.0, 0.0);
     Point b(1.0, 0.0);
 
-    Ellipse ellipse(a, b, 4);
+    Ellipse ellipse({a, b}, 4);
     ASSERT_TRUE(ellipse.containsPoint(Point(0, 0)));
 }
 
 TEST(Ellipse, Eccentricity) {
     Point a(-1.0, 0.0);
     Point b(1.0, 0.0);
-    Ellipse ellipse(a, b, 4);
+    Ellipse ellipse({a, b}, 4);
 
     double eccentricity = 0.5;
     ASSERT_NEAR(ellipse.eccentricity(), eccentricity, 1e-6);
@@ -239,7 +239,7 @@ TEST(Ellipse, Perimeter) {
 
     Point p1(-c, 0.0);
     Point p2(c, 0.0);
-    Ellipse ellipse(p1, p2, 2 * a);
+    Ellipse ellipse({p1, p2}, 2 * a);
     double pi = 3.1415926;
 
     double perimeter = 4 * (pi * a * b + (a - b)) / (a + b);
@@ -253,7 +253,7 @@ TEST(Ellipse, Area) {
 
     Point p1(-c, 0.0);
     Point p2(c, 0.0);
-    Ellipse ellipse(p1, p2, 2 * a);
+    Ellipse ellipse({p1, p2}, 2 * a);
     double pi = 3.1415926;
     
     double area = pi * a * b;

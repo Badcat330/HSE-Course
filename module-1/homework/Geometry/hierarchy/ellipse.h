@@ -9,7 +9,6 @@
 
 class Ellipse: public Shape {
  public:
-    Ellipse() = delete;
 	Ellipse(std::pair<Point,Point> _focuses, double _focusSum);
 	Ellipse(const Ellipse& origin);
 	Ellipse& operator=(const Ellipse& origin);
@@ -27,7 +26,7 @@ class Ellipse: public Shape {
 	void scale(Point center, double coefficient) override;
 
 	std::pair<Point,Point> getFocuses(); // фокусы эллипса
-	std::pair<Line, Line> directrices(); // пара директрис эллипса
+	//std::pair<Line, Line> directrices(); // пара директрис эллипса
 	double eccentricity() const; // эксцентриситет
 	Point center() const; // центр эллипса
 

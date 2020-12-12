@@ -23,7 +23,7 @@ double Polygon::area() const {
     for (size_t i = 0; i < verticesCount(); ++i)
         sum += points[i].x * points[(i + 1) % verticesCount()].y - points[(i + 1) % verticesCount()].x * points[i].y;
 
-    std::abs(sum);
+    sum = std::abs(sum);
     sum /= 2;
     return sum;
 }
@@ -79,18 +79,33 @@ bool Polygon::isSimilarTo(const Shape &another) const {
 }
 
 bool Polygon::operator==(const Shape &another) const {
-    // TODO: catch exception
-    const auto &polygon_another = dynamic_cast<const Polygon &>(another);
+    const auto* polygon_another = dynamic_cast<const Polygon*>(&another);
 
-    if (verticesCount() != polygon_another.verticesCount())
-        return false;
-
-    for (size_t i = 0; i < verticesCount(); ++i) {
-        if (points[i] != polygon_another.points[i])
+    if(polygon_another) {
+        if (verticesCount() != polygon_another->verticesCount())
             return false;
+
+        size_t offset = verticesCount();
+
+        for (size_t i = 0; i < verticesCount(); ++i) {
+             if (points[0] == polygon_another->points[i]) {
+                 offset = i;
+                 break;
+             }
+        }
+
+        if(offset == verticesCount())
+            return false;
+
+        for (size_t i = 0; i < verticesCount(); ++i) {
+            if (points[i] != polygon_another->points[(i + offset) % verticesCount()])
+                return false;
+        }
+
+        return true;
     }
 
-    return true;
+    return false;
 }
 
 bool Polygon::isConvex() const {
@@ -156,9 +171,12 @@ bool Polygon::containsPoint(Point point) const {
 }
 
 void Polygon::rotate(Point center, double angle) {
+    angle = angle / 180 * Consts::PI;
     for (size_t i = 0; i < verticesCount(); ++i) {
-        points[i].x = ((points[i].x - center.x) * cos(angle) - (points[i].y - center.y) * sin(angle)) + center.x;
-        points[i].y = ((points[i].x - center.x) * sin(angle) + (points[i].y - center.y) * cos(angle)) + center.y;
+        double x = points[i].x - center.x;
+        double y = points[i].y - center.y;
+        points[i].x = (x * cos(angle) - y * sin(angle)) + center.x;
+        points[i].y = (x * sin(angle) + y * cos(angle)) + center.y;
     }
 }
 

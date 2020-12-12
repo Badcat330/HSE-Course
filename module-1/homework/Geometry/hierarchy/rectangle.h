@@ -3,7 +3,7 @@
 #ifndef GEOMETRY_RECTANGLE_H
 #define GEOMETRY_RECTANGLE_H
 
-class Rectangle: protected Polygon {
+class Rectangle: public Polygon {
 public:
 	Rectangle(std::pair<Point, Point> points, double attitude);
 	Rectangle(const Rectangle& origin);
