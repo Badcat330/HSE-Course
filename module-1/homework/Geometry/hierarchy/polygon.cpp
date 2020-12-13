@@ -40,7 +40,6 @@ double Polygon::perimeter() const {
 }
 
 bool Polygon::isCongruentTo(const Shape &another) const {
-    // TODO: catch exception
     const auto &polygon_another = dynamic_cast<const Polygon &>(another);
 
     double k = points[0].distance(points[verticesCount() - 1]) /
@@ -58,7 +57,6 @@ std::vector<Point> Polygon::getVertices() const {
 }
 
 bool Polygon::isSimilarTo(const Shape &another) const {
-    // TODO: catch exception
     const auto &polygon_another = dynamic_cast<const Polygon &>(another);
 
     if (verticesCount() != polygon_another.verticesCount())
