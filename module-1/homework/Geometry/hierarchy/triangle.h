@@ -11,9 +11,9 @@ public:
 
     Triangle(Point x, Point y, Point z);
 
-    Triangle(const Triangle &origin);
+    Triangle(const Triangle& origin);
 
-    Triangle &operator=(const Triangle &origin);
+    Triangle& operator=(const Triangle& origin);
 
     ~Triangle() = default;
 

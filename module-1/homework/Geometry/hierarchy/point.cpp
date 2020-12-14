@@ -1,11 +1,11 @@
 #include <cmath>
 #include "point.h"
 
-bool operator==(const Point &a, const Point &b) {
+bool operator==(const Point& a, const Point& b) {
     return fabs(a.x - b.x) < Consts::EPS && fabs(a.y - b.y) < Consts::EPS;
 }
 
-bool operator!=(const Point &a, const Point &b) {
+bool operator!=(const Point& a, const Point& b) {
     return !(a == b);
 }
 

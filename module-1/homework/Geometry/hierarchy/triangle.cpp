@@ -7,11 +7,11 @@ Triangle::Triangle(Point x, Point y, Point z) {
     points.push_back(z);
 }
 
-Triangle::Triangle(const Triangle &origin) {
+Triangle::Triangle(const Triangle& origin) {
     points = origin.points;
 }
 
-Triangle &Triangle::operator=(const Triangle &origin) {
+Triangle& Triangle::operator=(const Triangle& origin) {
     points = origin.points;
     return *this;
 }

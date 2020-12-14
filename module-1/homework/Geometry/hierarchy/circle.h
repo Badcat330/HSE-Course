@@ -11,9 +11,9 @@ public:
 
     Circle(Point center, double radius);
 
-    Circle(const Circle &origin);
+    Circle(const Circle& origin);
 
-    Circle &operator=(const Circle &origin);
+    Circle& operator=(const Circle& origin);
 
     ~Circle() = default;
 

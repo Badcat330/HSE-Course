@@ -8,11 +8,11 @@
 
 class Polygon : public Shape {
 public:
-    explicit Polygon(std::vector<Point> &points);
+    explicit Polygon(std::vector<Point>& points);
 
-    Polygon(const Polygon &origin);
+    Polygon(const Polygon& origin);
 
-    Polygon &operator=(const Polygon &origin);
+    Polygon& operator=(const Polygon& origin);
 
     ~Polygon();
 
@@ -20,11 +20,11 @@ public:
 
     double perimeter() const override;
 
-    bool operator==(const Shape &another) const override;
+    bool operator==(const Shape& another) const override;
 
-    bool isCongruentTo(const Shape &another) const override;
+    bool isCongruentTo(const Shape& another) const override;
 
-    bool isSimilarTo(const Shape &another) const override;
+    bool isSimilarTo(const Shape& another) const override;
 
     bool containsPoint(Point point) const override;
 
@@ -36,9 +36,9 @@ public:
 
     void scale(Point center, double coefficient) override;
 
-    size_t verticesCount() const; // число вершин
-    std::vector<Point> getVertices() const; // вершины многоугольника
-    bool isConvex() const; // метод проверяющий "являться выпуклым"
+    size_t verticesCount() const;
+    std::vector<Point> getVertices() const;
+    bool isConvex() const;
 
 protected:
     Polygon() = default;

@@ -9,13 +9,10 @@ Ellipse::Ellipse(std::pair<Point, Point> _focuses, double _focusSum) : focuses(s
     b = std::sqrt(a * a - c * c);
 }
 
-Ellipse::Ellipse(const Ellipse &origin) : focuses(origin.focuses), focusSum(origin.focusSum) {
-    a = origin.a;
-    b = origin.b;
-    c = origin.c;
-}
+Ellipse::Ellipse(const Ellipse& origin) : focuses(origin.focuses), focusSum(origin.focusSum), a(origin.a), b(origin.b),
+                                          c(origin.c) {}
 
-Ellipse &Ellipse::operator=(const Ellipse &origin) {
+Ellipse& Ellipse::operator=(const Ellipse& origin) {
     focuses = origin.focuses;
     focusSum = origin.focusSum;
     return *this;
@@ -41,8 +38,8 @@ double Ellipse::perimeter() const {
     return 4 * (Consts::PI * a * b + (a - b)) / (a + b);
 }
 
-bool Ellipse::operator==(const Shape &another) const {
-    const auto *ellipse_another = dynamic_cast<const Ellipse *>(&another);
+bool Ellipse::operator==(const Shape& another) const {
+    const auto* ellipse_another = dynamic_cast<const Ellipse* >(&another);
 
     if (ellipse_another) {
         return focuses.first == ellipse_another->focuses.first && focuses.second == ellipse_another->focuses.second &&
@@ -110,18 +107,13 @@ bool Ellipse::containsPoint(Point point) const {
     return focuses.first.distance(point) + focuses.second.distance(point) <= focusSum;
 }
 
-bool Ellipse::isSimilarTo(const Shape &another) const {
-    const auto *ellipse_another = dynamic_cast<const Ellipse *>(&another);
-
-    if (ellipse_another) {
-        return a / ellipse_another->a == b / ellipse_another->b;
-    }
-
-    return false;
+bool Ellipse::isSimilarTo(const Shape& another) const {
+    const auto* ellipse_another = dynamic_cast<const Ellipse*>(&another);
+    return ellipse_another && (a / ellipse_another->a == b / ellipse_another->b);
 }
 
-bool Ellipse::isCongruentTo(const Shape &another) const {
-    const auto *ellipse_another = dynamic_cast<const Ellipse *>(&another);
+bool Ellipse::isCongruentTo(const Shape& another) const {
+    const auto* ellipse_another = dynamic_cast<const Ellipse*>(&another);
 
     if (ellipse_another) {
         double k = a / ellipse_another->a;

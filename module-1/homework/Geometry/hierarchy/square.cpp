@@ -9,11 +9,11 @@ Square::Square(std::pair<Point, Point> point) {
     points.push_back(Point(point.second.x, point.first.y));
 }
 
-Square::Square(const Square &origin) {
+Square::Square(const Square& origin) {
     points = origin.points;
 }
 
-Square &Square::operator=(const Square &origin) {
+Square& Square::operator=(const Square& origin) {
     points = origin.points;
     return *this;
 }

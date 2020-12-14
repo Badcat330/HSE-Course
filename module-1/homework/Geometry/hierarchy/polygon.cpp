@@ -1,14 +1,14 @@
 #include <vector>
 #include "polygon.h"
 
-Polygon::Polygon(std::vector<Point> &_points) : points(_points) {
+Polygon::Polygon(std::vector<Point>& _points) : points(_points) {
 }
 
-Polygon::Polygon(const Polygon &origin) {
+Polygon::Polygon(const Polygon& origin) {
     points = origin.points;
 }
 
-Polygon &Polygon::operator=(const Polygon &origin) {
+Polygon& Polygon::operator=(const Polygon& origin) {
     points = origin.points;
     return *this;
 }
@@ -39,8 +39,8 @@ double Polygon::perimeter() const {
     return perimeter;
 }
 
-bool Polygon::isCongruentTo(const Shape &another) const {
-    const auto &polygon_another = dynamic_cast<const Polygon &>(another);
+bool Polygon::isCongruentTo(const Shape& another) const {
+    const auto& polygon_another = dynamic_cast<const Polygon&>(another);
 
     double k = points[0].distance(points[verticesCount() - 1]) /
                polygon_another.points[0].distance(polygon_another.points[verticesCount() - 1]);
@@ -56,8 +56,8 @@ std::vector<Point> Polygon::getVertices() const {
     return points;
 }
 
-bool Polygon::isSimilarTo(const Shape &another) const {
-    const auto &polygon_another = dynamic_cast<const Polygon &>(another);
+bool Polygon::isSimilarTo(const Shape& another) const {
+    const auto& polygon_another = dynamic_cast<const Polygon&>(another);
 
     if (verticesCount() != polygon_another.verticesCount())
         return false;
@@ -76,8 +76,8 @@ bool Polygon::isSimilarTo(const Shape &another) const {
     return true;
 }
 
-bool Polygon::operator==(const Shape &another) const {
-    const auto *polygon_another = dynamic_cast<const Polygon *>(&another);
+bool Polygon::operator==(const Shape& another) const {
+    const auto* polygon_another = dynamic_cast<const Polygon*>(&another);
 
     if (polygon_another) {
         if (verticesCount() != polygon_another->verticesCount())
@@ -139,23 +139,30 @@ bool Polygon::isConvex() const {
 
 bool Polygon::containsPoint(Point point) const {
     bool flag;
-    double S, S1, S2, S3;
+    double sFullTriangle;
+    double sFirstPartTriangle;
+    double sSecondPartTriangle;
+    double sThirdPartTriangle;
 
     for (size_t i = 0; i < verticesCount(); ++i) {
         for (size_t j = 0; j < verticesCount() - 2; ++j) {
             size_t i1 = (j + i) % verticesCount();
             size_t i2 = (j + i + 1) % verticesCount();
 
-            S = abs(points[i1].x * (points[i2].y - points[i].y) + points[i2].x * (points[i].y - points[i1].y) +
-                    points[i].x * (points[i1].y - points[i2].y));
-            S1 = abs(points[i1].x * (points[i2].y - point.y) + points[i2].x * (point.y - points[i1].y) +
-                     point.x * (points[i1].y - points[i2].y));
-            S2 = abs(points[i].x * (points[i2].y - point.y) + points[i2].x * (point.y - points[i].y) +
-                     point.x * (points[i].y - points[i2].y));
-            S3 = abs(points[i1].x * (points[i].y - point.y) + points[i].x * (point.y - points[i1].y) +
-                     point.x * (points[i1].y - points[i].y));
+            sFullTriangle = abs(points[i1].x * (points[i2].y - points[i].y) +
+                            points[i2].x * (points[i].y - points[i1].y) +
+                            points[i].x * (points[i1].y - points[i2].y));
+            sFirstPartTriangle = abs(points[i1].x * (points[i2].y - point.y) +
+                                     points[i2].x * (point.y - points[i1].y) +
+                                     point.x * (points[i1].y - points[i2].y));
+            sSecondPartTriangle = abs(points[i].x * (points[i2].y - point.y) +
+                                      points[i2].x * (point.y - points[i].y) +
+                                      point.x * (points[i].y - points[i2].y));
+            sThirdPartTriangle = abs(points[i1].x * (points[i].y - point.y) +
+                                     points[i].x * (point.y - points[i1].y) +
+                                     point.x * (points[i1].y - points[i].y));
 
-            if (S == S1 + S2 + S3) {
+            if (sFullTriangle == sFirstPartTriangle + sSecondPartTriangle + sThirdPartTriangle) {
                 flag = true;
                 break;
             }

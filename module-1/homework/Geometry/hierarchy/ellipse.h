@@ -11,9 +11,9 @@ class Ellipse : public Shape {
 public:
     Ellipse(std::pair<Point, Point> _focuses, double _focusSum);
 
-    Ellipse(const Ellipse &origin);
+    Ellipse(const Ellipse& origin);
 
-    Ellipse &operator=(const Ellipse &origin);
+    Ellipse& operator=(const Ellipse& origin);
 
     ~Ellipse() = default;
 
@@ -21,11 +21,11 @@ public:
 
     double perimeter() const override;
 
-    bool operator==(const Shape &another) const override;
+    bool operator==(const Shape& another) const override;
 
-    bool isCongruentTo(const Shape &another) const override;
+    bool isCongruentTo(const Shape& another) const override;
 
-    bool isSimilarTo(const Shape &another) const override;
+    bool isSimilarTo(const Shape& another) const override;
 
     bool containsPoint(Point point) const override;
 
@@ -37,9 +37,9 @@ public:
 
     void scale(Point center, double coefficient) override;
 
-    std::pair<Point, Point> getFocuses(); // фокусы эллипса
-    double eccentricity() const; // эксцентриситет
-    Point center() const; // центр эллипса
+    std::pair<Point, Point> getFocuses();
+    double eccentricity() const;
+    Point center() const;
 
 protected:
     std::pair<Point, Point> focuses;
