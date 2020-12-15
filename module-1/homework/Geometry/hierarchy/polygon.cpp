@@ -1,4 +1,6 @@
 #include <vector>
+#include <cmath>
+
 #include "polygon.h"
 
 Polygon::Polygon(std::vector<Point>& _points) : points(_points) {
