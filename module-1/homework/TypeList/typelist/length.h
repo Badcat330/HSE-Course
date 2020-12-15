@@ -2,7 +2,7 @@
 
 #include "typelist.h"
 
-template<typename TList> 
+template<typename TList>
 struct Length;
 
 template<typename Head, typename Tail>

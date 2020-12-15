@@ -10,7 +10,7 @@ struct TypeAt<TypeList<Head, Tail>, index> {
     using TargetType = typename TypeAt<Tail, index - 1>::TargetType;
 };
 
-template<typename  Head, typename Tail>
+template<typename Head, typename Tail>
 struct TypeAt<TypeList<Head, Tail>, 0> {
     using TargetType = Head;
 };

@@ -2,7 +2,7 @@
 
 #include "typelist.h"
 
-template<typename TList, typename OldType, typename NewType> 
+template<typename TList, typename OldType, typename NewType>
 struct Replace;
 
 template<typename Head, typename Tail, typename OldType, typename NewType>
