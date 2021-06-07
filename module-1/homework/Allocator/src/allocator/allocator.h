@@ -22,7 +22,7 @@ public:
     using is_always_equal = std::false_type;
 
     CustomAllocator() {
-        arena_ = ::operator new(default_size_ * sizeof(value_type));
+        arena_ = ::operator new(kDefaultSize * sizeof(value_type));
         arena_offset_ = new size_type(0);
         num_allocators_ = new size_type(1);
     }
@@ -61,7 +61,7 @@ public:
 
     template<typename... Args>
     void construct(pointer p, Args &&... args) {  // NOLINT
-        ::new((void*)p) T(std::forward<Args>(args)...);
+        new(p) value_type(std::forward<Args>(args)...);
     };
 
     void destroy(pointer p) {  // NOLINT
@@ -75,10 +75,10 @@ public:
     friend bool operator!=(const CustomAllocator<K> &lhs, const CustomAllocator<U> &rhs) noexcept;
 
 private:
-    const size_type default_size_ = 20000;
-    size_type *num_allocators_;
+    static const size_type kDefaultSize = 20000;
     void *arena_ = nullptr;
     size_type *arena_offset_;
+    size_type *num_allocators_;
 };
 
 template<typename T, typename U>

@@ -22,12 +22,7 @@ class List {
     using allocator_type = Allocator;
 
     // Special member functions
-    List() {
-        nil_ = static_cast<Node*>(alloc_.allocate(1));
-        alloc_.construct(nil_);
-        nil_->next = nil_;
-        nil_->prev = nil_;
-    };
+    List() = default;
 
     List(const List& other) {
         // Clear list
@@ -103,12 +98,14 @@ class List {
         // Fill list
         nil_ = static_cast<Node*>(alloc_.allocate(1));
         alloc_.construct(nil_);
-        nil_->setNext(nil_);
-        nil_->setPrev(nil_);
+        nil_->next = nil_;
+        nil_->prev = nil_;
 
         for (auto iter = other.Begin(); iter != other.End(); ++iter) {
             PushBack(*iter);
         }
+
+        return *this;
     }
 
     List& operator=(List&& other) noexcept {
@@ -120,6 +117,8 @@ class List {
         alloc_ = std::move(other.alloc_);
         nil_ = other.nil_;
         other.nil_ = nullptr;
+
+        return *this;
     }
 
     // Element access
@@ -189,13 +188,15 @@ class List {
     }
 
     void Swap(List& other) noexcept {
-
+        List temp = std::move(other);
+        other = std::move(*this);
+        *this = std::move(temp);
     }
 
     void PushBack(const T& value) {
         Node* current_last = nil_->prev;
         Node* new_node = static_cast<Node*>(alloc_.allocate(1));
-        alloc_.construct(new_node, value);
+        alloc_.construct(new_node, nullptr, nullptr, value);
         new_node->next = nil_;
         new_node->prev = current_last;
         current_last->next = new_node;
@@ -206,7 +207,7 @@ class List {
     void PushBack(T&& value) {
         Node* current_last = nil_->prev;
         Node* new_node = static_cast<Node*>(alloc_.allocate(1));
-        alloc_.construct(new_node, std::forward<T>(value));
+        alloc_.construct(new_node, nullptr, nullptr, std::forward<T>(value));
         new_node->next = nil_;
         new_node->prev = current_last;
         current_last->next = new_node;
@@ -218,7 +219,7 @@ class List {
     void EmplaceBack(Args&& ... args) {
         Node* current_last = nil_->prev;
         Node* new_node = static_cast<Node*>(alloc_.allocate(1));
-        alloc_.construct(new_node, std::forward<Args>(args)...);
+        alloc_.construct(new_node, nullptr, nullptr, std::forward<Args>(args)...);
         new_node->next = nil_;
         new_node->prev = current_last;
         current_last->next = new_node;
@@ -243,7 +244,7 @@ class List {
     void PushFront(const T& value) {
         Node* current_front = nil_->next;
         Node* new_node = static_cast<Node*>(alloc_.allocate(1));
-        alloc_.construct(new_node, value);
+        alloc_.construct(new_node, nullptr, nullptr, value);
         current_front->prev = nil_;
         current_front->next = current_front;
         current_front->prev = new_node;
@@ -254,7 +255,7 @@ class List {
     void PushFront(T&& value) {
         Node* current_front = nil_->next;
         Node* new_node = static_cast<Node*>(alloc_.allocate(1));
-        alloc_.construct(new_node, std::forward<T>(value));
+        alloc_.construct(new_node, nullptr, nullptr, std::forward<T>(value));
         current_front->prev = nil_;
         current_front->next = current_front;
         current_front->prev = new_node;
@@ -266,7 +267,7 @@ class List {
     void EmplaceFront(Args&& ... args) {
         Node* current_front = nil_->next;
         Node* new_node = static_cast<Node*>(alloc_.allocate(1));
-        alloc_.construct(new_node, std::forward<Args>(args)...);
+        alloc_.construct(new_node, nullptr, nullptr, std::forward<Args>(args)...);
         current_front->prev = nil_;
         current_front->next = current_front;
         current_front->prev = new_node;
@@ -326,17 +327,27 @@ class List {
   private:
     // List Node
     struct Node {
-        value_type value;
         Node* prev;
         Node* next;
+        value_type value;
+
+        Node(): next(nullptr), prev(nullptr), value() {}
+
+        Node(Node* prev, Node* next, value_type value):
+            prev(prev),
+            next(next),
+            value(value) {
+        }
     };
 
-    using node_alloc_traits = std::allocator_traits<allocator_type>;
+    typedef typename std::allocator_traits<Allocator>::template rebind_alloc<Node> node_allocator;
+    typedef typename std::allocator_traits<node_allocator> node_alloc_traits;
 
     // List variables
+    node_allocator alloc_;
     Node* nil_;
     size_type size_ = 0;
-    allocator_type alloc_;
+
 
     // Helpful methods
 
