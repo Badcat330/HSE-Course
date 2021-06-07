@@ -150,7 +150,7 @@ public:
     }
 
     template <typename U>
-    constexpr T ValueOr(U&& default_value) const & {
+    constexpr T ValueOr(U&& default_value) const& {
         if (base::engaged_) {
             return base::val_;
         }
@@ -181,7 +181,7 @@ public:
         return &(base::val_);
     }
 
-    constexpr const value_type& operator*() const & {
+    constexpr const value_type& operator*() const& {
         return base::val_;
     }
 
@@ -189,7 +189,7 @@ public:
         return base::val_;
     }
 
-    constexpr const value_type&& operator*() const && {
+    constexpr const value_type&& operator*() const&& {
         return std::move(base::val_);
     }
 
