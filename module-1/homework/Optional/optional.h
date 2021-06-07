@@ -40,7 +40,7 @@ public:
     }
 
     template <typename... Args>
-    constexpr OptionalDestructBase(InPlace, Args &&...args)
+    constexpr OptionalDestructBase(InPlace, Args &&... args)
         : val_(std::forward<Args>(args)...), engaged_(true) {
     }
 
@@ -85,7 +85,7 @@ public:
     }
 
     template <typename... Args>
-    constexpr OptionalDestructBase(InPlace, Args &&...args)
+    constexpr OptionalDestructBase(InPlace, Args &&... args)
         : val_(std::forward<Args>(args)...), engaged_(true) {
     }
 
@@ -130,7 +130,7 @@ public:
     }
 
     template <typename... Args>
-    constexpr explicit Optional(InPlace, Args &&...args)
+    constexpr explicit Optional(InPlace, Args &&... args)
         : base(kInPlace, std::forward<Args>(args)...) {
     }
 
