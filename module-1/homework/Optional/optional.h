@@ -1,15 +1,13 @@
+#pragma once
 
 #include <cstdlib>
 #include <type_traits>
 #include <optional>
 
-#pragma once
-
 namespace task {
 
 struct NullOpt {
   explicit constexpr NullOpt(int) {
-
   }
 };
 
@@ -21,13 +19,13 @@ struct InPlace {
 
 constexpr InPlace kInPlace = InPlace();
 
-template <typename T, bool=std::is_trivially_destructible_v<T>>
+template <typename T, bool= std::is_trivially_destructible_v<T>>
 class OptionalDestructBase;
 
 template <typename T>
-class OptionalDestructBase<T, false>
-{
+class OptionalDestructBase<T, false> {
 public:
+
   using value_type = T;
 
   ~OptionalDestructBase() {
@@ -36,22 +34,20 @@ public:
     }
   }
 
-  constexpr OptionalDestructBase() noexcept : null_state_(), engaged_(false) {
-
+  constexpr OptionalDestructBase() noexcept: null_state_(), engaged_(false) {
   }
 
-  constexpr OptionalDestructBase(NullOpt) noexcept : null_state_(), engaged_(false) {
-
+  constexpr OptionalDestructBase(NullOpt) noexcept: null_state_(), engaged_(false) {
   }
 
   template <typename... Args>
-  constexpr OptionalDestructBase(InPlace, Args &&... args) : val_(std::forward<Args>(args)...), engaged_(true) {
-
+  constexpr OptionalDestructBase(InPlace, Args &&... args)
+    : val_(std::forward<Args>(args)...), engaged_(true) {
   }
 
   template <typename U = T>
-  constexpr OptionalDestructBase(U &&value) : val_(std::forward<U>(value)), engaged_(true) {
-
+  constexpr OptionalDestructBase(U &&value)
+    : val_(std::forward<U>(value)), engaged_(true) {
   }
 
 protected:
@@ -80,27 +76,26 @@ protected:
 };
 
 template <typename T>
-class OptionalDestructBase<T, true>
-{
+class OptionalDestructBase<T, true> {
 public:
   using value_type = T;
 
-  constexpr OptionalDestructBase() noexcept : null_state_(), engaged_(false) {
-
+  constexpr OptionalDestructBase() noexcept
+    : null_state_(), engaged_(false) {
   }
 
-  constexpr OptionalDestructBase(NullOpt) noexcept : null_state_(), engaged_(false) {
-
+  constexpr OptionalDestructBase(NullOpt) noexcept
+    : null_state_(), engaged_(false) {
   }
 
   template <typename... Args>
-  constexpr OptionalDestructBase(InPlace, Args &&... args) : val_(std::forward<Args>(args)...), engaged_(true) {
-
+  constexpr OptionalDestructBase(InPlace, Args &&... args)
+    : val_(std::forward<Args>(args)...), engaged_(true) {
   }
 
   template <typename U = T>
-  constexpr OptionalDestructBase(U &&value) : val_(std::forward<U>(value)), engaged_(true) {
-
+  constexpr OptionalDestructBase(U &&value)
+    : val_(std::forward<U>(value)), engaged_(true) {
   }
 
 protected:
@@ -125,8 +120,7 @@ protected:
 };
 
 template <typename T>
-class Optional : public OptionalDestructBase<T>
-{
+class Optional : public OptionalDestructBase<T> {
 public:
   using base = OptionalDestructBase<T>;
   using value_type = T;
@@ -134,17 +128,16 @@ public:
   constexpr Optional() noexcept = default;
 
   template <typename U = value_type>
-  constexpr explicit Optional(U &&value) : base(std::forward<U>(value)) {
-
+  constexpr explicit Optional(U &&value)
+    : base(std::forward<U>(value)) {
   }
 
   constexpr explicit Optional(NullOpt) noexcept {
-
   }
 
   template <typename... Args>
-  constexpr explicit Optional(InPlace, Args &&... args): base(kInPlace, std::forward<Args>(args)...) {
-
+  constexpr explicit Optional(InPlace, Args &&... args)
+    : base(kInPlace, std::forward<Args>(args)...) {
   }
 
   Optional &operator=(NullOpt) noexcept {
@@ -163,7 +156,7 @@ public:
   }
 
   template <typename U>
-  constexpr T ValueOr(U &&default_value) const &{
+  constexpr T ValueOr(U &&default_value) const & {
     if (base::engaged_) {
       return base::val_;
     }
@@ -171,7 +164,7 @@ public:
   }
 
   template <typename U>
-  constexpr T ValueOr(U &&default_value) &&{
+  constexpr T ValueOr(U &&default_value) && {
     if (base::engaged_) {
       return base::val_;
     }
@@ -194,19 +187,19 @@ public:
     return &(base::val_);
   }
 
-  constexpr const value_type &operator*() const &{
+  constexpr const value_type &operator*() const & {
     return base::val_;
   }
 
-  constexpr value_type &operator*() &{
+  constexpr value_type &operator*() & {
     return base::val_;
   }
 
-  constexpr const value_type &&operator*() const &&{
+  constexpr const value_type &&operator*() const && {
     return std::move(base::val_);
   }
 
-  constexpr value_type &&operator*() &&{
+  constexpr value_type &&operator*() && {
     return std::move(base::val_);
   }
 };
