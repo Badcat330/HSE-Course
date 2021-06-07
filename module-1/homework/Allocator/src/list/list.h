@@ -6,11 +6,10 @@
 
 namespace task {
 
-template<typename T, typename Allocator = std::allocator<T>>
+template <typename T, typename Allocator = std::allocator<T>>
 class List {
 
-  public:
-
+public:
     // Iterator define and types define
     class Iterator;
     using value_type = T;
@@ -22,7 +21,12 @@ class List {
     using allocator_type = Allocator;
 
     // Special member functions
-    List() = default;
+    List() : nil_(alloc_.allocate(1)) {
+        alloc_.construct(nil_);
+        nil_->next = nil_;
+        nil_->prev = nil_;
+        size_ = 0;
+    }
 
     List(const List& other) {
         // Clear list
@@ -64,12 +68,20 @@ class List {
         }
     }
 
-    List(List&& other) : alloc_(std::move(other.alloc_)), nil_(other.nil_) {
-        other.nil_ = nullptr;
+    List(List&& other) {
+        nil_ = alloc_.allocate(1);
+        alloc_.construct(nil_);
+        nil_->next = nil_;
+        nil_->prev = nil_;
+        *this = std::move(other);
     }
 
-    List(List&& other, const Allocator& alloc) : alloc_(alloc), nil_(other.nil_) {
-        other.nil_ = nullptr;
+    List(List&& other, const Allocator& alloc) : alloc_(alloc), nil_(other.nil_), size_(other.size_)  {
+        other.nil_ = alloc_.allocate(1);
+        alloc_.construct(other.nil_);
+        other.nil_->next = other.nil_;
+        other.nil_->prev = other.nil_;
+        other.size_ = 0;
     }
 
     ~List() {
@@ -89,17 +101,9 @@ class List {
 
         // Clear list
         Clear();
-        alloc_.destroy(nil_);
-        alloc_.deallocate(nil_, 1);
-
-        // Copy alloc
-        alloc_ = node_alloc_traits::select_on_container_copy_construction(other.alloc_);
-
-        // Fill list
-        nil_ = static_cast<Node*>(alloc_.allocate(1));
-        alloc_.construct(nil_);
-        nil_->next = nil_;
-        nil_->prev = nil_;
+        if (node_alloc_traits::propagate_on_container_copy_assignment::value) {
+            alloc_ = other.alloc_;
+        }
 
         for (auto iter = other.Begin(); iter != other.End(); ++iter) {
             PushBack(*iter);
@@ -114,9 +118,20 @@ class List {
         }
 
         Clear();
-        alloc_ = std::move(other.alloc_);
-        nil_ = other.nil_;
-        other.nil_ = nullptr;
+
+        if (node_alloc_traits::propagate_on_container_move_assignment::value) {
+            alloc_ = std::move(other.alloc_);
+            Node* buf = nil_;
+            nil_ = other.nil_;
+            other.nil_ = buf;
+            size_ = other.size_;
+            other.size_ = 0;
+        } else {
+            for (auto iter = other.Begin(); iter != other.End(); ++iter) {
+                PushBack(std::move(*iter));
+            }
+            other.Clear();
+        }
 
         return *this;
     }
@@ -178,7 +193,7 @@ class List {
         return size_;
     }
 
-//    size_type MaxSize() const noexcept;
+    //    size_type MaxSize() const noexcept;
 
     // Modifiers
     void Clear() {
@@ -188,9 +203,17 @@ class List {
     }
 
     void Swap(List& other) noexcept {
-        List temp = std::move(other);
-        other = std::move(*this);
-        *this = std::move(temp);
+        if (&other == this) {
+            return;
+        }
+
+        if (node_alloc_traits::propagate_on_container_swap::value) {
+            std::swap(alloc_, other.alloc_);
+            std::swap(nil_, other.nil_);
+            std::swap(size_, other.size_);
+        } else {
+            std::swap(nil_, other.nil_);
+        }
     }
 
     void PushBack(const T& value) {
@@ -215,8 +238,8 @@ class List {
         ++size_;
     }
 
-    template<typename... Args>
-    void EmplaceBack(Args&& ... args) {
+    template <typename... Args>
+    void EmplaceBack(Args&&... args) {
         Node* current_last = nil_->prev;
         Node* new_node = static_cast<Node*>(alloc_.allocate(1));
         alloc_.construct(new_node, nullptr, nullptr, std::forward<Args>(args)...);
@@ -245,8 +268,8 @@ class List {
         Node* current_front = nil_->next;
         Node* new_node = static_cast<Node*>(alloc_.allocate(1));
         alloc_.construct(new_node, nullptr, nullptr, value);
-        current_front->prev = nil_;
-        current_front->next = current_front;
+        new_node->prev = nil_;
+        new_node->next = current_front;
         current_front->prev = new_node;
         nil_->next = new_node;
         ++size_;
@@ -256,20 +279,20 @@ class List {
         Node* current_front = nil_->next;
         Node* new_node = static_cast<Node*>(alloc_.allocate(1));
         alloc_.construct(new_node, nullptr, nullptr, std::forward<T>(value));
-        current_front->prev = nil_;
-        current_front->next = current_front;
+        new_node->prev = nil_;
+        new_node->next = current_front;
         current_front->prev = new_node;
         nil_->next = new_node;
         ++size_;
     }
 
-    template<typename... Args>
-    void EmplaceFront(Args&& ... args) {
+    template <typename... Args>
+    void EmplaceFront(Args&&... args) {
         Node* current_front = nil_->next;
         Node* new_node = static_cast<Node*>(alloc_.allocate(1));
         alloc_.construct(new_node, nullptr, nullptr, std::forward<Args>(args)...);
-        current_front->prev = nil_;
-        current_front->next = current_front;
+        new_node->prev = nil_;
+        new_node->next = current_front;
         current_front->prev = new_node;
         nil_->next = new_node;
         ++size_;
@@ -310,12 +333,16 @@ class List {
     void Unique() {
         Node* current = nil_->next;
         while (current != nil_ && current->next != nil_) {
-            current = current->value == current->next->value ? DeleteNode(current)->prev : current->next;
+            if (current->value == current->next->value) {
+                DeleteNode(current->next);
+            } else {
+                current = current->next;
+            }
         }
     }
 
     void Sort() {
-        List* answer = sort(this);
+        List* answer = Sort(this);
         nil_ = answer->nil_;
         size_ = answer->size_;
     }
@@ -324,19 +351,22 @@ class List {
         return allocator_type(alloc_);
     }
 
-  private:
+private:
     // List Node
     struct Node {
-        Node* prev;
         Node* next;
+        Node* prev;
         value_type value;
 
-        Node(): next(nullptr), prev(nullptr), value() {}
+        Node() : next(nullptr), prev(nullptr), value() {
+        }
 
-        Node(Node* prev, Node* next, value_type value):
-            prev(prev),
-            next(next),
-            value(value) {
+        Node(Node* prev, Node* next, value_type value) : next(next), prev(prev), value(value) {
+        }
+
+        ~Node() {
+            next = nullptr;
+            prev = nullptr;
         }
     };
 
@@ -347,7 +377,6 @@ class List {
     node_allocator alloc_;
     Node* nil_;
     size_type size_ = 0;
-
 
     // Helpful methods
 
@@ -378,10 +407,9 @@ class List {
             Node* tmp = buf->next;
 
             if (buf->value <= pivot) {
-                less->PushBack(buf);
-            }
-            else {
-                greater->PushBack(buf);
+                less->PushBack(buf->value);
+            } else {
+                greater->PushBack(buf->value);
             }
 
             buf = tmp;
@@ -395,8 +423,7 @@ class List {
             answer->nil_->next = less->nil_->next;
             less->nil_->prev->next = collection->nil_->next;
             collection->nil_->next->prev = less->nil_->prev;
-        }
-        else {
+        } else {
             answer->nil_->next = collection->nil_->next;
         }
 
@@ -405,8 +432,7 @@ class List {
         if (greater->nil_->next) {
             greater->nil_->next->prev = collection->nil_->next;
             answer->nil_->prev = greater->nil_->prev;
-        }
-        else {
+        } else {
             answer->nil_->prev = collection->nil_->next;
         }
 
@@ -414,16 +440,16 @@ class List {
         return answer;
     }
 
-  public:
+public:
     class Iterator {
-      public:
+    public:
         using iterator_category = std::bidirectional_iterator_tag;
         using difference_type = std::ptrdiff_t;
         using value_type = T;
         using pointer = value_type*;
         using reference = value_type&;
 
-        explicit Iterator(Node* ptr) : ptr_(ptr) {};
+        explicit Iterator(Node* ptr) : ptr_(ptr){};
 
         reference operator*() const {
             return ptr_->value;
@@ -463,11 +489,9 @@ class List {
             return a.ptr_ != b.ptr_;
         };
 
-      private:
+    private:
         Node* ptr_ = nullptr;
-
     };
-
 };
 
 }  // namespace task

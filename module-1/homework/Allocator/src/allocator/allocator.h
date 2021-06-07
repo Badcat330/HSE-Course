@@ -65,7 +65,7 @@ public:
     };
 
     void destroy(pointer p) {  // NOLINT
-        delete p;
+        p->~value_type();
     };
 
     template<typename K, typename U>
