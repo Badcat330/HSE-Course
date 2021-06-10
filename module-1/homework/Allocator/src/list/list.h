@@ -76,7 +76,8 @@ public:
         *this = std::move(other);
     }
 
-    List(List&& other, const Allocator& alloc) : alloc_(alloc), nil_(other.nil_), size_(other.size_)  {
+    List(List&& other, const Allocator& alloc)
+        : alloc_(alloc), nil_(other.nil_), size_(other.size_) {
         other.nil_ = alloc_.allocate(1);
         alloc_.construct(other.nil_);
         other.nil_->next = other.nil_;
@@ -397,13 +398,13 @@ private:
             return collection;
         }
 
-        int pivot = collection->Front();
+        T pivot = collection->Front();
 
         List* less = new List();
         List* greater = new List();
         Node* buf = collection->nil_->next->next;
 
-        while (buf != nullptr) {
+        while (buf != collection->nil_) {
             Node* tmp = buf->next;
 
             if (buf->value <= pivot) {
@@ -417,27 +418,18 @@ private:
 
         less = Sort(less);
         greater = Sort(greater);
-        List* answer = new List();
 
-        if (less->nil_->next) {
-            answer->nil_->next = less->nil_->next;
-            less->nil_->prev->next = collection->nil_->next;
-            collection->nil_->next->prev = less->nil_->prev;
-        } else {
-            answer->nil_->next = collection->nil_->next;
-        }
+        less->PushBack(pivot);
 
-        collection->nil_->next->next = greater->nil_->next;
+        less->nil_->prev->next = greater->nil_->next;
+        greater->nil_->next->prev = less->nil_->prev;
 
-        if (greater->nil_->next) {
-            greater->nil_->next->prev = collection->nil_->next;
-            answer->nil_->prev = greater->nil_->prev;
-        } else {
-            answer->nil_->prev = collection->nil_->next;
-        }
+        greater->nil_->prev->next = less->nil_;
+        less->nil_->prev = greater->nil_->prev;
 
-        answer->size_ = less->size_ + greater->size_ + 1;
-        return answer;
+        less->size_ += greater->size_;
+
+        return less;
     }
 
 public:
