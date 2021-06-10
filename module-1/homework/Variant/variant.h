@@ -7,21 +7,21 @@ namespace task {
 
 //----------------Helper structures----------------
 
-template <std::size_t Index>
+template <size_t Index>
 struct InPlaceIndex {
     explicit InPlaceIndex() = default;
 };
 
-template <std::size_t Index>
+template <size_t Index>
 constexpr InPlaceIndex<Index> kInPlaceIndex{};
 
-template <std::size_t Index, typename... Types>
+template <size_t Index, typename... Types>
 union Union;
 
-template <std::size_t Index>
+template <size_t Index>
 union Union<Index> {};
 
-template <std::size_t Index, typename T, typename... Types>
+template <size_t Index, typename T, typename... Types>
 union Union<Index, T, Types...> {
 public:
     T head;
@@ -44,14 +44,12 @@ public:
 };
 
 struct AssignUnion {
-    template <std::size_t Index, typename U, std::size_t UnionIndex, typename Head,
-              typename... Tail>
+    template <size_t Index, typename U, size_t UnionIndex, typename Head, typename... Tail>
     static void Set(U&& value, InPlaceIndex<0>, Union<UnionIndex, Head, Tail...>& u) {
         u.head = value;
     }
 
-    template <std::size_t Index, typename U, std::size_t UnionIndex, typename Head,
-              typename... Tail>
+    template <size_t Index, typename U, size_t UnionIndex, typename Head, typename... Tail>
     static void Set(U&& value, InPlaceIndex<Index>, Union<UnionIndex, Head, Tail...>& u) {
         AssignUnion::Set<Index - 1>(std::forward<U>(value), kInPlaceIndex<Index - 1>, u.tail);
     }
@@ -63,14 +61,14 @@ struct AccessUnion {
         return std::forward<U>(value).head;
     }
 
-    template <typename U, std::size_t Index>
+    template <typename U, size_t Index>
     static constexpr auto&& Get(U&& value, InPlaceIndex<Index>) {
         return Get(std::forward<U>(value).tail, kInPlaceIndex<Index - 1>);
     }
 };
 
 struct AccessVariant {
-    template <std::size_t Index, typename T>
+    template <size_t Index, typename T>
     static constexpr auto&& Get(T&& value) {
         return AccessUnion::Get(std::forward<T>(value).data_, kInPlaceIndex<Index>);
     }
@@ -99,11 +97,11 @@ struct TypeAt<index, TypeList<Head, Tail...>> {
 
 //----------------Find Type----------------
 
-const static std::size_t kNotFounded = -1;
-const static std::size_t kAmbiguity = kNotFounded - 1;
+const static size_t kNotFounded = -1;
+const static size_t kAmbiguity = kNotFounded - 1;
 
-template <std::size_t SizeOfFounded>
-constexpr std::size_t FindCondition(std::size_t i, std::size_t res,
+template <size_t SizeOfFounded>
+constexpr size_t FindCondition(size_t i, size_t res,
                                     const bool (&founded)[SizeOfFounded],
                                     const bool (&convertible)[SizeOfFounded]) {
     if (res == kNotFounded && (founded[i] || convertible[i])) {
@@ -125,8 +123,8 @@ constexpr std::size_t FindCondition(std::size_t i, std::size_t res,
     return res;
 }
 
-template <std::size_t SizeOfFounded>
-constexpr std::size_t FindPos(std::size_t current_position, const bool (&founded)[SizeOfFounded],
+template <size_t SizeOfFounded>
+constexpr size_t FindPos(size_t current_position, const bool (&founded)[SizeOfFounded],
                               const bool (&convertible)[SizeOfFounded]) {
     if (current_position == SizeOfFounded) {
         return kNotFounded;
@@ -141,7 +139,7 @@ struct FindExactlyOneChecked {
     constexpr static bool kFounded[sizeof...(Types)] = {std::is_same<TargetType, Types>::value...};
     constexpr static bool kFoundedConvertible[sizeof...(Types)] = {
         std::is_convertible<TargetType, Types>::value...};
-    constexpr static std::size_t kValue = FindPos(0, kFounded, kFoundedConvertible);
+    constexpr static size_t kValue = FindPos(0, kFounded, kFoundedConvertible);
 };
 
 template <typename T>
@@ -175,7 +173,7 @@ public:
     constexpr Variant() noexcept {
     }
 
-    template <typename T, std::size_t Pos = FindExactlyOneType<T, Types...>::kValue>
+    template <typename T, size_t Pos = FindExactlyOneType<T, Types...>::kValue>
     Variant& operator=(T&& t) noexcept {
         AssignUnion::Set<Pos>(std::forward<T>(t), kInPlaceIndex<Pos>, data_);
         return *this;
@@ -188,7 +186,7 @@ private:
 
 //----------------Getters----------------
 
-template <std::size_t Idx, typename T>
+template <size_t Idx, typename T>
 auto&& GenericGet(T&& v) {
     return AccessVariant::Get<Idx>(std::forward<T>(v));
 }
