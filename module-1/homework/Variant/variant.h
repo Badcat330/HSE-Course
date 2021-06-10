@@ -101,9 +101,8 @@ const static size_t kNotFounded = -1;
 const static size_t kAmbiguity = kNotFounded - 1;
 
 template <size_t SizeOfFounded>
-constexpr size_t FindCondition(size_t i, size_t res,
-                                    const bool (&founded)[SizeOfFounded],
-                                    const bool (&convertible)[SizeOfFounded]) {
+constexpr size_t FindCondition(size_t i, size_t res, const bool (&founded)[SizeOfFounded],
+                               const bool (&convertible)[SizeOfFounded]) {
     if (res == kNotFounded && (founded[i] || convertible[i])) {
         return i;
     }
@@ -125,7 +124,7 @@ constexpr size_t FindCondition(size_t i, size_t res,
 
 template <size_t SizeOfFounded>
 constexpr size_t FindPos(size_t current_position, const bool (&founded)[SizeOfFounded],
-                              const bool (&convertible)[SizeOfFounded]) {
+                         const bool (&convertible)[SizeOfFounded]) {
     if (current_position == SizeOfFounded) {
         return kNotFounded;
     }
