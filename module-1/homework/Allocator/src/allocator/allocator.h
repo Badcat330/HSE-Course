@@ -51,15 +51,15 @@ public:
         ++(*num_allocators_);
     }
 
-    void* GetArena() {
+    void* GetArena() const {
         return arena_;
     }
 
-    size_type* GetArenaOffset() {
+    size_type* GetArenaOffset() const {
         return arena_offset_;
     }
 
-    size_type* GetNumAllocators() {
+    size_type* GetNumAllocators() const {
         return num_allocators_;
     }
 
