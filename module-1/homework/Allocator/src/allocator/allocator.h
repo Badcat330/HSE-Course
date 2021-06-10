@@ -22,7 +22,7 @@ public:
     using is_always_equal = std::false_type;
 
     CustomAllocator() {
-        arena_ = ::operator new(kDefaultSize* sizeof(value_type));
+        arena_ = ::operator new(kDefaultSize * sizeof(value_type));
         arena_offset_ = new size_type(0);
         num_allocators_ = new size_type(1);
     }
@@ -45,10 +45,22 @@ public:
 
     template <typename U>
     explicit CustomAllocator(const CustomAllocator<U>& other) noexcept
-        : arena_(other.arena_),
-          arena_offset_(other.arena_offset_),
-          num_allocators_(other.num_allocators_) {
+        : arena_(other.GetArena()),
+          arena_offset_(other.GetArenaOffset()),
+          num_allocators_(other.GetNumAllocators()) {
         ++(*num_allocators_);
+    }
+
+    void* GetArena() {
+        return arena_;
+    }
+
+    size_type* GetArenaOffset() {
+        return arena_offset_;
+    }
+
+    size_type* GetNumAllocators() {
+        return num_allocators_;
     }
 
     T* allocate(size_t n) {  // NOLINT
