@@ -343,9 +343,16 @@ public:
     }
 
     void Sort() {
-        List* answer = Sort(this);
-        nil_ = answer->nil_;
-        size_ = answer->size_;
+        for (size_type i = 0; i < size_; ++i) {
+            Node* iter = nil_->next;
+
+            for (size_type j = 0; j < size_ - i - 1; ++j) {
+                if (iter->value > iter->next->value) {
+                    std::swap(iter->value, iter->next->value);
+                }
+                iter = iter->next;
+            }
+        }
     }
 
     allocator_type GetAllocator() const noexcept {
@@ -391,45 +398,6 @@ private:
         alloc_.destroy(arg);
         alloc_.deallocate(arg, 1);
         return buf;
-    }
-
-    List* Sort(List* collection) {
-        if (collection->Size() <= 1) {
-            return collection;
-        }
-
-        T pivot = collection->Front();
-
-        List* less = new List();
-        List* greater = new List();
-        Node* buf = collection->nil_->next->next;
-
-        while (buf != collection->nil_) {
-            Node* tmp = buf->next;
-
-            if (buf->value <= pivot) {
-                less->PushBack(buf->value);
-            } else {
-                greater->PushBack(buf->value);
-            }
-
-            buf = tmp;
-        }
-
-        less = Sort(less);
-        greater = Sort(greater);
-
-        less->PushBack(pivot);
-
-        less->nil_->prev->next = greater->nil_->next;
-        greater->nil_->next->prev = less->nil_->prev;
-
-        greater->nil_->prev->next = less->nil_;
-        less->nil_->prev = greater->nil_->prev;
-
-        less->size_ += greater->size_;
-
-        return less;
     }
 
 public:
