@@ -35,6 +35,7 @@ public:
         if ((*num_allocators_) == 0) {
             ::operator delete(arena_);
             delete arena_offset_;
+            delete num_allocators_;
         }
     }
 
