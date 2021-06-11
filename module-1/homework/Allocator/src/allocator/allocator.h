@@ -24,13 +24,15 @@ public:
     CustomAllocator() = default;
 
     CustomAllocator(const CustomAllocator& other) noexcept
-        : arena_{other.arena_}, arena_offset_{other.arena_offset_} {
-        ++num_allocators_;
+        : arena_{other.arena_},
+          arena_offset_{other.arena_offset_},
+          num_allocators_(other.num_allocators_) {
+        ++(*num_allocators_);
     }
 
     ~CustomAllocator() {
-        --num_allocators_;
-        if (num_allocators_ == 0) {
+        --(*num_allocators_);
+        if ((*num_allocators_) == 0) {
             ::operator delete(arena_);
             delete arena_offset_;
         }
@@ -38,8 +40,10 @@ public:
 
     template <typename U>
     explicit CustomAllocator(const CustomAllocator<U>& other) noexcept
-        : arena_{other.GetArena()}, arena_offset_{other.GetArenaOffset()} {
-        ++num_allocators_;
+        : arena_{other.GetArena()},
+          arena_offset_{other.GetArenaOffset()},
+          num_allocators_(other.GetNumAllocators()) {
+        ++(*num_allocators_);
     }
 
     void* GetArena() const {
@@ -48,6 +52,10 @@ public:
 
     size_type* GetArenaOffset() const {
         return arena_offset_;
+    }
+
+    size_type* GetNumAllocators() const {
+        return num_allocators_;
     }
 
     T* allocate(size_t n) {  // NOLINT
@@ -75,13 +83,10 @@ public:
 
 private:
     static const size_type kDefaultSize{20000};
-    static size_type num_allocators_;
     void* arena_{::operator new(kDefaultSize * sizeof(value_type))};
     size_type* arena_offset_{new size_type(0)};
+    size_type* num_allocators_{new size_type{1}};
 };
-
-template <typename T>
-std::size_t CustomAllocator<T>::num_allocators_ = 0;
 
 template <typename T, typename U>
 bool operator==(const CustomAllocator<T>& lhs, const CustomAllocator<U>& rhs) noexcept {
