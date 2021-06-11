@@ -4,7 +4,7 @@
 
 class SharedCount {
 public:
-    explicit SharedCount(std::size_t refs = 0) noexcept : shared_owners_(refs) {
+    explicit SharedCount(size_t refs = 0) noexcept : shared_owners_{refs} {
     }
 
     void AddShared() noexcept {
@@ -20,22 +20,21 @@ public:
         return false;
     }
 
-    std::size_t UseCount() const noexcept {
+    size_t UseCount() const noexcept {
         return shared_owners_.load() + 1;
     }
 
     virtual void OnZeroShared() = 0;
 
 protected:
-    std::atomic<std::size_t> shared_owners_;
-    virtual ~SharedCount() {
-    }
+    std::atomic<size_t> shared_owners_;
+    virtual ~SharedCount() = default;
 };
 
 class SharedWeakCount : public SharedCount {
 public:
-    explicit SharedWeakCount(std::size_t refs = 0) noexcept
-        : SharedCount(refs), shared_weak_owners_(refs) {
+    explicit SharedWeakCount(size_t refs = 0) noexcept
+        : SharedCount{refs}, shared_weak_owners_{refs} {
     }
 
     void AddShared() noexcept {
@@ -56,7 +55,7 @@ public:
         --shared_weak_owners_;
     }
 
-    std::size_t UseCount() const noexcept {
+    size_t UseCount() const noexcept {
         return SharedCount::UseCount();
     }
 
@@ -66,7 +65,7 @@ public:
     virtual void OnZeroSharedWeak() noexcept {};
 
 private:
-    std::atomic<std::size_t> shared_weak_owners_;
+    std::atomic<size_t> shared_weak_owners_;
 
 protected:
     virtual ~SharedWeakCount(){};
@@ -75,10 +74,10 @@ protected:
 template <typename T, typename Deleter>
 class ControlBlock : public SharedWeakCount {
 public:
-    ControlBlock(T pointer) : pointer_(pointer) {
+    ControlBlock(T pointer) : pointer_{pointer} {
     }
 
-    ControlBlock(T pointer, Deleter deleter) : pointer_(pointer), deleter_(deleter) {
+    ControlBlock(T pointer, Deleter deleter) : pointer_{pointer}, deleter_{deleter} {
     }
 
     ControlBlock(ControlBlock&) = delete;
@@ -90,7 +89,7 @@ public:
 
     SharedWeakCount* Lock() override {
         if (UseCount() > 0) {
-            ControlBlock* newBlock = new ControlBlock(pointer_);
+            ControlBlock* newBlock = new ControlBlock{pointer_};
             newBlock->AddShared();
             return newBlock;
         }

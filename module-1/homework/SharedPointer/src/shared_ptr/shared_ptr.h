@@ -11,17 +11,17 @@ struct DefaultDeleter {
 };
 
 // Remove Types struct
-template <class T>
+template <typename T>
 struct RemoveExtent {
     using type = T;
 };
 
-template <class T>
+template <typename T>
 struct RemoveExtent<T[]> {
     using type = T;
 };
 
-template <class T, std::size_t N>
+template <typename T, size_t N>
 struct RemoveExtent<T[N]> {
     using type = T;
 };
@@ -48,21 +48,21 @@ public:
     }
 
     template <typename Y>
-    explicit SharedPtr(Y* p) : pointer_(p) {
-        control_ = new ControlBlock<pointer_type, DefaultDeleter<pointer_type>>(p);
+    explicit SharedPtr(Y* p) : pointer_{p} {
+        control_ = new ControlBlock<pointer_type, DefaultDeleter<pointer_type>>{p};
     }
 
     template <typename Y, typename Deleter>
-    SharedPtr(Y* p, Deleter deleter) noexcept : pointer_(p) {
-        control_ = new ControlBlock<pointer_type, Deleter>(p, deleter);
+    SharedPtr(Y* p, Deleter deleter) noexcept : pointer_{p} {
+        control_ = new ControlBlock<pointer_type, Deleter>{p, deleter};
     }
 
     SharedPtr(const SharedPtr& other) noexcept
-        : pointer_(other.pointer_), control_(other.control_) {
+        : pointer_{other.pointer_}, control_{other.control_} {
         control_->AddShared();
     }
 
-    SharedPtr(SharedPtr&& other) noexcept : pointer_(other.pointer_), control_(other.control_) {
+    SharedPtr(SharedPtr&& other) noexcept : pointer_{other.pointer_}, control_{other.control_} {
         other.control_ = nullptr;
         other.pointer_ = nullptr;
     }
@@ -77,7 +77,7 @@ public:
 
     template <typename Y>
     SharedPtr& operator=(const SharedPtr<Y>& r) noexcept {
-        if (this == r) {
+        if (this == &r) {
             return *this;
         }
 
@@ -123,7 +123,7 @@ public:
         }
 
         pointer_ = p;
-        control_ = new ControlBlock<Y*, DefaultDeleter<pointer_type>>(p);
+        control_ = new ControlBlock<Y*, DefaultDeleter<pointer_type>>{p};
     }
 
     template <typename Y, typename Deleter>
@@ -133,7 +133,7 @@ public:
         }
 
         pointer_ = p;
-        control_ = new ControlBlock<Y*, Deleter>(p, deleter);
+        control_ = new ControlBlock<Y*, Deleter>{p, deleter};
     }
 
     void Swap(SharedPtr& other) noexcept {
@@ -180,7 +180,7 @@ private:
 
 template <typename T, typename... Args>
 SharedPtr<T> MakeShared(Args&&... args) {
-    return SharedPtr<T>(new T(std::forward<Args>(args)...));
+    return SharedPtr<T>(new T{std::forward<Args>(args)...});
 }
 
 // WeakPtr
@@ -196,15 +196,15 @@ public:
 
     template <typename Y>
     explicit WeakPtr(const SharedPtr<Y>& other)
-        : pointer_(other.pointer_), control_(other.control_) {
+        : pointer_{other.pointer_}, control_{other.control_} {
         control_->AddWeak();
     }
 
-    WeakPtr(const WeakPtr& other) noexcept : pointer_(other.pointer_), control_(other.control_) {
+    WeakPtr(const WeakPtr& other) noexcept : pointer_{other.pointer_}, control_{other.control_} {
         control_->AddWeak();
     }
 
-    WeakPtr(WeakPtr&& other) noexcept : pointer_(other.pointer_), control_(other.control_) {
+    WeakPtr(WeakPtr&& other) noexcept : pointer_{other.pointer_}, control_{other.control_} {
         other.pointer_ = nullptr;
         other.control_ = nullptr;
     }
