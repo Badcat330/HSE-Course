@@ -289,6 +289,6 @@ public:
     friend class SharedPtr;
 
 public:
-    poiter_type pointer_ = nullptr;
-    SharedWeakCount* control_ = nullptr;
+    poiter_type pointer_{nullptr};
+    SharedWeakCount* control_{nullptr};
 };
