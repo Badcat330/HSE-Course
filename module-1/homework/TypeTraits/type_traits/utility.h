@@ -5,42 +5,42 @@
 
 template <typename T>
 struct RemoveConst {
-  using type = T;
+    using type = T;
 };
 
 template <typename T>
 struct RemoveConst<const T> {
-  using type = T;
+    using type = T;
 };
 
 template <typename T>
 struct RemoveVolatile {
-  using type = T;
+    using type = T;
 };
 
 template <typename T>
-struct RemoveVolatile <volatile T> {
-  using type = T;
+struct RemoveVolatile<volatile T> {
+    using type = T;
 };
 
 template <typename T>
 struct RemoveCV {
-  using type = typename RemoveVolatile<typename RemoveConst<T>::type>::type;
+    using type = typename RemoveVolatile<typename RemoveConst<T>::type>::type;
 };
 
 template <typename T>
 struct RemoveReference {
-  using type = T;
+    using type = T;
 };
 
 template <typename T>
 struct RemoveReference<T&> {
-  using type = T;
+    using type = T;
 };
 
 template <typename T>
 struct RemoveReference<T&&> {
-  using type = T;
+    using type = T;
 };
 
 template <typename T>
@@ -59,15 +59,14 @@ struct AddConst {
 template <typename T>
 using add_const_t = typename AddConst<T>::type;
 
-
 template <typename T>
 struct AddLvalueReference {
-  using type = T&;
+    using type = T&;
 };
 
 template <typename T>
 struct AddRvalueReference {
-  using type = T&&;
+    using type = T&&;
 };
 
 template <typename T>
