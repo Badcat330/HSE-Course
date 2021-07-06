@@ -48,6 +48,13 @@ TEST(Erase, Test2) {
     testing::StaticAssertTypeEq<Erase<NullType, int>::NewTypeList, NullType>();
 }
 
+TEST(Erase, Test3) {
+    typedef TypeList<double, TypeList<int, NullType>> actual;
+    typedef TypeList<double, NullType> expected;
+
+    testing::StaticAssertTypeEq<Erase<actual, int>::NewTypeList, expected>();
+}
+
 TEST(EraseAll, Test1) {
     typedef TypeList<int, TypeList<int, NullType>> actual;
     
